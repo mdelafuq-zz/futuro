@@ -32,6 +32,13 @@ module.exports = [
         "clobbers": [
             "window.tlantic.plugins.socket"
         ]
+    },
+    {
+        "file": "plugins/cz.blocshop.socketsforcordova/socket.js",
+        "id": "cz.blocshop.socketsforcordova.Socket",
+        "clobbers": [
+            "window.Socket"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -40,7 +47,8 @@ module.exports.metadata =
     "cordova-plugin-whitelist": "1.0.0",
     "org.apache.cordova.device": "0.3.0",
     "org.apache.cordova.dialogs": "0.3.0",
-    "com.tlantic.plugins.socket": "0.3.1"
+    "com.tlantic.plugins.socket": "0.3.1",
+    "cz.blocshop.socketsforcordova": "1.1.0"
 }
 // BOTTOM OF METADATA
 });

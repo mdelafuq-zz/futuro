@@ -124,7 +124,7 @@ public class Connection extends Thread {
 						if (chunk != null) {
 							chunk = chunk.replaceAll("\"\"", "null");
 							System.out.print("## RECEIVED DATA: " + chunk);
-							hook.sendMessage(this.host, this.port, chunk);
+							hook.sendMessage(this.host, this.port, chunk.toString());
 						}
 					}
 				} catch (Exception e) {
