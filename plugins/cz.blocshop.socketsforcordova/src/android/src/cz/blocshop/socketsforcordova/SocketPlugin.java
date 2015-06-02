@@ -61,12 +61,17 @@ public class SocketPlugin extends CordovaPlugin {
 		byte[] dataBuffer = new byte[data.length()];
 		for(int i = 0; i < dataBuffer.length; i++) {
 			dataBuffer[i] = (byte) data.getInt(i);
+			//dataBuffer[i] = (byte) data.getBytes(i,"UTF-8");
+			//dataBuffer[i] = String data.getString(i,"UTF-8");
 		}
+
+		//String values = new String(dataBuffer[i],"UTF-8");
 		
 		SocketAdapter socket = this.getSocketAdapter(socketKey);
 		
 		try {
 			socket.write(dataBuffer);
+			//socket.write(dataBuffer);
 			callbackContext.success();
 		} catch (IOException e) {
 			callbackContext.error(e.toString());

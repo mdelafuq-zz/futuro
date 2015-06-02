@@ -63,6 +63,7 @@ public class SocketPlugin extends CordovaPlugin {
 			dataBuffer[i] = (byte) data.getInt(i);
 		}
 		
+		//String values = new String(dataBuffer,"UTF-8");
 		SocketAdapter socket = this.getSocketAdapter(socketKey);
 		
 		try {

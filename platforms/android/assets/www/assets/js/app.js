@@ -54,11 +54,18 @@ app.Disconnect = function(){
 app.Write = function(message){
 	var dataString = message;
 	var data = new Uint8Array(dataString.length);
+  alert(data)
 	for (var i = 0; i < data.length; i++) {
 	  data[i] = dataString.charCodeAt(i);
 	}
+
+  var resultuint=''
+    for (var item in data){
+      resultuint += data[item];
+    }
+  alert(resultuint);
 	socket.write(data);
-	$('#textarea').val('')
+	//$('#textarea').val('')
 }
 
 document.addEventListener("deviceready", onDeviceReady, false);
@@ -101,6 +108,7 @@ function connectToHost(host, port) {
 	);
 }
 
+/*conviernte el texto recibido (ASCII) de la tarjeta a hex*/
 function WriteInConsole(text) {
 	// var response = ''
 
@@ -112,16 +120,32 @@ function WriteInConsole(text) {
 	$('.console').append('<br>')
 }
 
-function receiveData(data) {
-	// $('.console').append(data + '<br>')
-    var chars = new Array(data.length);
-    for (var i = 0; i < data.length; i++) {
-        chars.push(String.fromCharCode(data[i]));
+//convierte el mensaje tecleado en ascii
+function hex2ascii(hexValue) {
+    var hex = hexValue.toString();//force conversion
+    var asciiValue = '';
+    for (var i = 0; i < hex.length; i += 2)
+    {
+        asciiValue += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
     }
-    var dataString = chars.join("");
-    dataString.split(/(?:\r\n|\r|\n)/g).forEach(WriteInConsole);
+    app.Write(asciiValue);
+    alert(asciiValue);
 }
 
+
+function receiveData(data) {
+	// $('.console').append(data + '<br>')
+    //var chars = new Array(data.length);
+    var test=''
+    for (var item in data){
+      //test += data[item].toString(16);
+      test += data[item].toString(16);
+    }
+    $('.console').append(test);
+    $('.console').append('<br>');
+}
+
+/*funcion solo para el menu*/
 $('.footer').on('click','.footer-item',function(){
 	$('.footer-active').removeClass('footer-active')
 	$(this).addClass('footer-active')
@@ -139,7 +163,8 @@ $(document).on('click','#disconnect',function(e){
 
 $(document).on('click','#send',function(){
 	var msg = $('#textarea').val()
-	app.Write(msg)
+  alert(msg)
+	hex2ascii(msg);
 })
 
 $(document).on('click','#clear',function(){
