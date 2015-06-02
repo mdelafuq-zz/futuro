@@ -44,31 +44,55 @@
             </div>
         </div>
 
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="acceso">
+                div1
+            </div>
+            <div role="tabpanel" class="tab-pane" id="iluminacion">
+                div2
+            </div>
+            <div role="tabpanel" class="tab-pane" id="climatizacion">
+                3
+            </div>
+            <div role="tabpanel" class="tab-pane" id="config">
+                4
+            </div>
+        </div>
+
         <footer class="footer">
             <!-- <div class="row"> -->
-                <div class="footer-item footer-active col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                    <span class='span-vcenter'>
-                        <i class="fa fa-unlock-alt fa-2x"></i>
-                    </span>
+                <div role="presentation" class="footer-item footer-active col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <a href="#acceso" aria-controls="acceso" role="tab" data-toggle="tab" class="a-nostyle">
+                        <span class='span-vcenter'>
+                            <i class="fa fa-unlock-alt fa-2x"></i>
+                        </span>
+                    </a>
                 </div>
-                <div class="footer-item col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                    <span class='span-vcenter'>
-                        <i class="fa fa-lightbulb-o fa-2x"></i>
-                    </span>
+                <div role="presentation" class="footer-item col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <a href="#iluminacion" aria-controls="iluminacion" role="tab" class="a-nostyle" data-toggle="tab">
+                        <span class='span-vcenter'>
+                            <i class="fa fa-lightbulb-o fa-2x"></i>
+                        </span>
+                    </a>
                 </div>
-                <div class="footer-item col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                    <span class='span-vcenter'>
-                        <i class="fa fa-cloud fa-2x"></i>
-                    </span>
+                <div role="presentation" class="footer-item col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <a href="#climatizacion" aria-controls="climatizacion" role="tab" class="a-nostyle" data-toggle="tab">
+                        <span class='span-vcenter'>
+                            <i class="fa fa-cloud fa-2x"></i>
+                        </span>
+                    </a>
                 </div>
-                <div class="footer-item col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                    <span class='span-vcenter'>
-                        <i class="fa fa-cog fa-2x"></i>
-                    </span>
+                <div role="presentation" class="footer-item col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <a href="#config" aria-controls="config" role="tab" data-toggle="tab" class="a-nostyle">
+                        <span class='span-vcenter'>
+                            <i class="fa fa-cog fa-2x"></i>
+                        </span>
+                    </a>
                 </div>
-                
             <!-- </div> -->
         </footer>
+
+
 
 
         <script src="cordova.js"></script>

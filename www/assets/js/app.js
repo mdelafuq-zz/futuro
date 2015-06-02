@@ -129,17 +129,14 @@ function hex2ascii(hexValue) {
         asciiValue += String.fromCharCode( parseInt(hex.substr(i, 2), 16) );
     }
     app.Write(asciiValue);
-    alert(asciiValue);
 }
 
 function receiveData(data) {
-	// $('.console').append(data + '<br>')
-    //var chars = new Array(data.length);
-    var test=''
+    var test = ''
     for (var item in data){
-      //test += data[item].toString(16);
-      test += data[item].toString(16);
+      test += pad( data[item].toString(16) , 2 )
     }
+
     $('.console').append(test);
     $('.console').append('<br>');
 }
@@ -162,7 +159,6 @@ $(document).on('click','#disconnect',function(e){
 
 $(document).on('click','#send',function(){
 	var msg = $('#textarea').val()
-  alert(msg)
 	hex2ascii(msg);
 })
 
@@ -170,5 +166,9 @@ $(document).on('click','#clear',function(){
 	$('.console').html('')
 })
 
-
+function pad(n, width, z) {
+  z = z || '0';
+  n = n + '';
+  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
 
