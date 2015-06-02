@@ -22,8 +22,8 @@ body{
 	height: inherit;
 	width:25%;
 	display: table;
-	text-align: center;
-	color:#9a9a9a;
+	text-align: center!important;
+	color:#9a9a9a!important;
 }
 
 .footer-item:hover{
@@ -33,7 +33,7 @@ body{
 
 .footer-active{
 	background: #000;
-	color:white;
+	color:white!important;
 	border-bottom: 2px solid blue;
 }
 
@@ -43,4 +43,23 @@ body{
 	height: 400px;
 	max-height: 400px;
 	overflow-y:scroll;
+}
+
+.a-nostyle:link {
+    color: #9a9a9a;
+}
+
+/* visited link */
+.a-nostyle:visited {
+    color: #9a9a9a;
+}
+
+/* mouse over link */
+.a-nostyle:hover {
+    color: #9a9a9a;
+}
+
+/* selected link */
+.a-nostyle:active {
+    color: white;
 }
