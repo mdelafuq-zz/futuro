@@ -1,0 +1,71 @@
+@media (min-width: 1px) {
+  .foco {
+
+    font-size: 50px;
+  }
+}
+
+@media (min-width: 320px) {
+  .foco {
+    font-size: 70px;
+  }
+}
+
+@media (min-width: 480px) {
+  .foco {
+    font-size: 80px;
+  }
+}
+
+@media (min-width: 640px) {
+  .foco {
+    font-size: 110px;
+  }
+
+@media (min-width: 768px) {
+  .foco {
+    font-size: 140px;
+  }
+}
+
+
+@media (min-height: 1024px) {
+  .foco {
+    font-size: 170px;
+  }
+}
+
+@media (min-height: 1px) {
+  .foco {
+
+    font-size: 50px;
+  }
+}
+
+@media (min-height: 320px) {
+  .foco {
+    font-size: 70px;
+  }
+}
+
+@media (min-height: 480px) {
+  .foco {
+    font-size: 80px;
+  }
+}
+
+@media (min-height: 640px) {
+  .foco {
+    font-size: 110px;
+  }
+
+@media (min-height: 768px) {
+  .foco {
+    font-size: 140px;
+  }
+}
+@media (min-height: 1024px) {
+  .foco {
+    font-size: 170px;
+  }
+}

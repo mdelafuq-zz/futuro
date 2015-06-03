@@ -5,6 +5,7 @@ body{
 	height:inherit;
 	background: #eeeeee;
 }
+
 .span-vcenter{
 	display: table-cell;
 	vertical-align: middle;
@@ -47,23 +48,19 @@ body{
 
 .a-nostyle:link {
     color: #9a9a9a;
-    text-align: center!important;
 }
 
 /* visited link */
 .a-nostyle:visited {
     color: #9a9a9a;
-    text-align: center!important;
 }
 
 /* mouse over link */
 .a-nostyle:hover {
     color: #9a9a9a;
-    text-align: center!important;
 }
 
 /* selected link */
 .a-nostyle:active {
     color: white;
-    text-align: center!important;
 }

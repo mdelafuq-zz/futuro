@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Title Page</title>
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="assets/css/bootstrap.css">
+        <link rel="stylesheet" href="assets/css/app.css">
+    </head>
+    <body>
+        <h1 class="text-center">Futuro Inteligente</h1>
+        <a href="index.html" class="btn btn-info" role="button">Atras</a>
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style='padding-bottom: 80px;'>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="host" placeholder="Host" value="192.168.100.200">
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="form-control" id="port" placeholder="Port" value="10001">
+                        </div>
+                        <button id='connect' class="btn btn-success">Conectar</button>
+                        <button id='disconnect' class='btn btn-danger pull-right'>Desconectar</button>
+                    </form>
+
+                    <div style='margin-top:10px'>
+                        <span id='connectedOn'></span>
+                    </div>
+
+                    <h5>Write to socket</h5>
+                    <textarea id='textarea' class='form-control'></textarea>
+                    <button class='btn btn-primary pull-right' id='send' style='margin-top:10px'>Send</button>
+
+                    <div class="console col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        
+                    </div>
+                    <button class='btn btn-default btn-block' id='clear'>Limpiar consola</button>
+                </div>
+            </div>
+        </div>
+
+        
+        <script src="cordova.js"></script>
+        <script src="assets/js/jquery.js"></script>
+        <script src="assets/js/bootstrap.min.js"></script>
+        <script src="assets/js/app.js"></script>
+    </body>
+</html>
