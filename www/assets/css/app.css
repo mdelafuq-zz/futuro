@@ -19,7 +19,7 @@ body{
 }
 
 .footer-item{
-	height: inherit;
+	height: 60px;
 	width:25%;
 	display: table;
 	text-align: center!important;
