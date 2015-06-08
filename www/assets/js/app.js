@@ -107,29 +107,25 @@ var decode = {
       decode.checksum = response.substr(response.length-8, response.length-5)
       decode.end = response.substr(response.lenth-4, response.length-1)
 
-      decode.CommandToRead(decode.idCmd)
-    }
+      decode.CommandToRead()
+    },
 
-    CommandToRead: function(idCmd){
-      switch(idCmd){
-        case '0001' break; // estado actual
-        case '0100' break; // modificar fecha
-        case '0400' break; // Modificar configuracion
-        case '0A00' break; // Leer configuracion
-        case '0500' break; // Agregar un usuario
-        case '0600' break; // Eliminar un usuario 
-        case '0B00' break; // Descargar bitacora
-        case '0C00' break; // Descargar bloque de usuario (opcional si Admin)
-        case '0900' break; // Encender/apagar SP (SP1 luz, SP2 aire, SP3 opcional)
-        case '0001' break; // 
-        case '0001' break; // 
-        case '0001' break; // 
-        default: alert('La respuesta no puede ser interpretada') break;
+    CommandToRead: function(){
+      switch(decode.idCmd){
+        case '0001': break; // estado actual
+        case '0100': break; // modificar fecha
+        case '0400': break; // Modificar configuracion
+        case '0A00': break; // Leer configuracion
+        case '0500': break; // Agregar un usuario
+        case '0600': break; // Eliminar un usuario 
+        case '0B00': break; // Descargar bitacora
+        case '0C00': break; // Descargar bloque de usuario (opcional si Admin)
+        case '0900': break; // Encender/apagar SP (SP1 luz, SP2 aire, SP3 opcional)
+        case '0001': break; // 
+        case '0001': break; // 
+        case '0001': break; // 
+        default: alert('La respuesta no puede ser interpretada'); break;
       }
-    }
-
-    function abrirpuerta(){
-
     }
 
 }
@@ -137,9 +133,6 @@ var decode = {
 
 
 document.addEventListener("deviceready", onDeviceReady, false);
-$("[name='checkbox_foco']").bootstrapSwitch();
-$.fn.bootstrapSwitch.defaults.size = 'large';
-
 
 function onDeviceReady() {
     window.socket = new Socket();
@@ -184,7 +177,8 @@ $(document).on('click','#clear',function(){
 })
 
 $(document).ready(function(){
-    $('#nav').hide()
+    $("[name='checkbox_foco']").bootstrapSwitch();
+    $.fn.bootstrapSwitch.defaults.size = 'large';
 })
 
 
