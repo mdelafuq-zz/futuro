@@ -18,7 +18,7 @@ var connection = {
             connection.host,
             connection.port,
             function(){
-                $('#connectedOn').html('Connected on ' + connection.host + ' on port ' + connection.port)
+                $('#connectedOn').html('Connected on ' + host + ' on port ' + port)
             },
             function(errorMessage) {
                 alert("Error during connection, error: " + errorMessage);
@@ -84,6 +84,7 @@ var convert = {
 }
 
 var decode = {
+
     start: '',
     serialNo: '',
     idCmd: '',
@@ -92,15 +93,15 @@ var decode = {
     end: '',
 
     slicer: function(response){
-
+        
     }
+
+
 }
 
 
 
 document.addEventListener("deviceready", onDeviceReady, false);
-$("[name='checkbox_foco']").bootstrapSwitch();
-$.fn.bootstrapSwitch.defaults.size = 'large';
 
 
 function onDeviceReady() {

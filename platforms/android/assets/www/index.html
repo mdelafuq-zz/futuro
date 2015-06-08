@@ -9,11 +9,41 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" href="assets/css/bootstrap.css">
-        <link rel="stylesheet" href="assets/css/bootstrap-switch.css">      
         <link rel="stylesheet" href="assets/css/app.css">
         <link rel="stylesheet" href="assets/css/iluminacion.css">
     </head>
     <body>
+        <!-- <h1 class="text-center">Futuro Inteligente</h1>
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style='padding-bottom: 60px;'>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="host" placeholder="Host" value="192.168.100.200">
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="form-control" id="port" placeholder="Port" value="10001">
+                        </div>
+                        <button id='connect' class="btn btn-success">Conectar</button>
+                        <button id='disconnect' class='btn btn-danger pull-right'>Desconectar</button>
+                    </form>
+
+                    <div style='margin-top:10px'>
+                        <span id='connectedOn'></span>
+                    </div>
+
+                    <h5>Write to socket</h5>
+                    <textarea id='textarea' class='form-control'></textarea>
+                    <button class='btn btn-primary pull-right' id='send' style='margin-top:10px'>Send</button>
+
+                    <div class="console col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        
+                    </div>
+                    <button class='btn btn-default btn-block' id='clear'>Limpiar consola</button>
+                </div>
+            </div>
+        </div> -->
 
         <div class="tab-content "style='padding-bottom: 60px;'>
             <div role="tabpanel" class="tab-pane fade in active" id="acceso">
@@ -22,9 +52,8 @@
             <div role="tabpanel" class="tab-pane fade" id="iluminacion">
                 <div id="iluminacion" class="col-xs-12 content" align='center'>
                     <div class='foco'>
-                        <i class="fa fa-lightbulb-o  fa-5x" name="focus" style='max-width:100%; max-height:inherit'></i>  
+                        <i class="fa fa-lightbulb-o  fa-5x" name="focus" style='max-width:100%; max-height:inherit'></i>
                     </div>
-                    <input type="checkbox" name="checkbox_foco" checked>
                 </div>
             </div>
             <div role="tabpanel" class="tab-pane fade" id="climatizacion">
@@ -48,7 +77,6 @@
                     <div role="presentation" class="footer-item col-xs-3 col-sm-3 col-md-3 col-lg-3">
                             <span class='span-vcenter'>
                                 <i class="fa fa-lightbulb-o fa-2x"></i>
-
                             </span>
                     </div>
                 </a>
@@ -69,10 +97,12 @@
             <!-- </div> -->
         </footer>
 
+
+
+
         <script src="cordova.js"></script>
         <script src="assets/js/jquery.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
-        <script src="assets/js/bootstrap-switch.js"></script>
         <script src="assets/js/app.js"></script>
 
     </body>
