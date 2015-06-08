@@ -29,7 +29,7 @@
 }
 
 
-@media (min-height: 1024px) {
+@media (min-width: 1024px) {
   .foco {
     font-size: 170px;
   }

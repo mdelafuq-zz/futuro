@@ -18,7 +18,7 @@ var connection = {
             connection.host,
             connection.port,
             function(){
-                $('#connectedOn').html('Connected on ' + host + ' on port ' + port)
+                $('#connectedOn').html('Connected on ' + connection.host + ' on port ' + connection.port)
             },
             function(errorMessage) {
                 alert("Error during connection, error: " + errorMessage);
@@ -49,12 +49,16 @@ var connection = {
     },
 
     Read: function (data) {
-        var test = ''
+        var response = ''
         for (var item in data){
-          test += convert.toHex( data[item] )
+          response += convert.toHex( data[item] )
         }
 
-        $('.console').append(test);
+        decode.slicer(response)
+
+
+
+        $('.console').append(response);
         $('.console').append('<br>');
     }
 }
@@ -93,7 +97,40 @@ var decode = {
     end: '',
 
     slicer: function(response){
-        
+      response.length
+      response = '235E 00000008DC1E61CF 0001 0006B39BAE45070404050607 0018 3C3F'
+      response = '235E00000008DC1E61CF00010006B39BAE4507040405060700183C3F'
+
+      decode.start = response.substr(0, 3)
+      decode.serialNo = response.substr(4, 19)
+      decode.idCmd = response.substr(20, 23)
+      decode.ACK = response.substr(24, response.length-9)
+      decode.checksum = response.substr(response.length-8, response.length-5)
+      decode.end = response.substr(response.lenth-4, response.length-1)
+
+      decode.CommandToRead(decode.idCmd)
+    }
+
+    CommandToRead: function(idCmd){
+      switch(idCmd){
+        case '0001' break; // estado actual
+        case '0100' break; // modificar fecha
+        case '0400' break; // Modificar configuracion
+        case '0A00' break; // Leer configuracion
+        case '0500' break; // Agregar un usuario
+        case '0600' break; // Eliminar un usuario 
+        case '0B00' break; // Descargar bitacora
+        case '0C00' break; // Descargar bloque de usuario (opcional si Admin)
+        case '0900' break; // Encender/apagar SP (SP1 luz, SP2 aire, SP3 opcional)
+        case '0001' break; // 
+        case '0001' break; // 
+        case '0001' break; // 
+        default: alert('La respuesta no puede ser interpretada') break;
+      }
+    }
+
+    function abrirpuerta(){
+
     }
 
 
