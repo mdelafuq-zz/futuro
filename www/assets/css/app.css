@@ -2,9 +2,10 @@ html{
   height: 100%;
 }
 body {
-  min-height: 100%;
-  padding-bottom: 70px;
-  background: #eeeeee;
+	min-height: 100%;
+	padding-top: 60px;
+	margin-bottom: 70px;
+	background: #eeeeee;
 }
 
 .span-vcenter{

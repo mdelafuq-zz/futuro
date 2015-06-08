@@ -88,7 +88,6 @@ var convert = {
 }
 
 var decode = {
-
     start: '',
     serialNo: '',
     idCmd: '',
@@ -133,12 +132,13 @@ var decode = {
 
     }
 
-
 }
 
 
 
 document.addEventListener("deviceready", onDeviceReady, false);
+$("[name='checkbox_foco']").bootstrapSwitch();
+$.fn.bootstrapSwitch.defaults.size = 'large';
 
 
 function onDeviceReady() {
