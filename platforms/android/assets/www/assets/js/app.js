@@ -49,13 +49,15 @@ var connection = {
     },
 
     Read: function (data) {
-        var test = ''
+        var response = ''
         for (var item in data){
-          test += convert.toHex( data[item] )
+          response += convert.toHex( data[item] )
         }
 
-        $('.console').append(test);
+        $('.console').append(response);
         $('.console').append('<br>');
+        decode.slicer(response)
+
     }
 }
 
@@ -92,16 +94,60 @@ var decode = {
     end: '',
 
     slicer: function(response){
+      response.length
 
+      decode.start = response.substr(0, 4)
+      alert(decode.start)
+      decode.serialNo = response.substr(4, 16)
+      alert(decode.serialNo)
+      decode.idCmd = response.substr(20, 4)
+      alert(decode.idCmd)
+      decode.ACK = response.substring(24, response.length-8);
+      alert(decode.ACK)
+      decode.checksum = response.substr(response.length-8, 4)
+      alert(decode.checksum)
+      decode.end = response.substr(response.length-4, 4)
+      alert(decode.end)
+
+      decode.CommandToRead()
+    },
+
+    CommandToRead: function(){
+      switch(decode.idCmd){
+        case '0001': break; // estado actual
+        case '0100': break; // modificar fecha
+        case '0400': break; // Modificar configuracion
+        case '0A00': break; // Leer configuracion
+        case '0500': break; // Agregar un usuario
+        case '0600': break; // Eliminar un usuario 
+        case '0B00': break; // Descargar bitacora
+        case '0C00': break; // Descargar bloque de usuario (opcional si Admin)
+        case '0900': break; // Encender/apagar SP (SP1 luz, SP2 aire, SP3 opcional)
+        default: alert('La respuesta no puede ser interpretada'); break;
+      }
+    }
+
+}
+
+var controller = {
+    sendCommand: function(){
+      switch(decode.idCmd){
+        case '0100': break; // modificar fecha
+        case '0400': break; // Modificar configuracion
+        case '0A00': break; // Leer configuracion
+        case '0500': break; // Agregar un usuario
+        case '0600': break; // Eliminar un usuario 
+        case '0B00': break; // Descargar bitacora
+        case '0C00': break; // Descargar bloque de usuario (opcional si Admin)
+        case '0900': break; // Encender/apagar SP (SP1 luz, SP2 aire, SP3 opcional)
+        default: alert('No se reconoce comando a envíar'); break;
+      }
     }
 }
 
 
 
 document.addEventListener("deviceready", onDeviceReady, false);
-$("[name='checkbox_foco']").bootstrapSwitch();
-$.fn.bootstrapSwitch.defaults.size = 'large';
-
 
 function onDeviceReady() {
     window.socket = new Socket();
@@ -115,9 +161,11 @@ function onDeviceReady() {
     };
 }
 
-//convierte el mensaje tecleado en ascii
-
-
+$(document).on('switchChange.bootstrapSwitch','input[name="my-checkbox"]', function(event, state) {
+  console.window(this); // DOM element
+  console.log(event); // jQuery event
+  console.log(state); // true | false
+});
 
 
 /*funcion solo para el menu*/
@@ -146,7 +194,7 @@ $(document).on('click','#clear',function(){
 })
 
 $(document).ready(function(){
-    $('#nav').hide()
+    $("[name='checkbox_foco']").bootstrapSwitch();
 })
 
 

@@ -4,8 +4,17 @@ html{
 body {
 	min-height: 100%;
 	padding-top: 60px;
-	margin-bottom: 70px;
+	margin-bottom: 100px;
 	background: #eeeeee;
+}
+
+.menu{
+	background-color: #125688;
+
+}
+
+.icon-resp{
+	margin-bottom: 20px;
 }
 
 .span-vcenter{
@@ -37,7 +46,7 @@ body {
 .footer-active{
 	background: #000;
 	color:white!important;
-	border-bottom: 2px solid blue;
+	border-bottom: 8px solid #125688;
 }
 
 .console{
