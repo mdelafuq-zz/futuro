@@ -19,12 +19,12 @@ var connection = {
             connection.port,
             function(){
                 $('#connectedOn').html('Connected on ' + connection.host + ' on port ' + connection.port)
+                //alert("Conectado al servidor socket")
             },
             function(errorMessage) {
                 alert("Error during connection, error: " + errorMessage);
             }
-        );
-        
+        );      
     },
 
     Disconnect: function(){
@@ -68,17 +68,16 @@ var convert = {
         for (var i = 0; i < hex.length; i += 2)
         {
             asciiValue += String.fromCharCode( parseInt(hex.substr(i, 2), 16) );
-            console.log(asciiValue)
         }
-        //return asciiValue;
-        connection.Write(asciiValue);
         return asciiValue
     },
+
     AddZero: function (n, width, z) {
       z = z || '0';
       n = n + '';
       return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
     },
+
     toHex: function(unicodeValue){
         var hex = unicodeValue.toString(16)
         return convert.AddZero( hex , 2 )
@@ -97,17 +96,17 @@ var decode = {
       response.length
 
       decode.start = response.substr(0, 4)
-      alert(decode.start)
+      //alert(decode.start)
       decode.serialNo = response.substr(4, 16)
-      alert(decode.serialNo)
+      //alert(decode.serialNo)
       decode.idCmd = response.substr(20, 4)
-      alert(decode.idCmd)
+      //alert(decode.idCmd)
       decode.ACK = response.substring(24, response.length-8);
-      alert(decode.ACK)
+      //alert(decode.ACK)
       decode.checksum = response.substr(response.length-8, 4)
-      alert(decode.checksum)
+      //alert(decode.checksum)
       decode.end = response.substr(response.length-4, 4)
-      alert(decode.end)
+      //alert(decode.end)
 
       decode.CommandToRead()
     },
@@ -130,10 +129,25 @@ var decode = {
 }
 
 var controller = {
-    sendCommand: function(){
-      switch(decode.idCmd){
+
+    sendCommand: function(idCmdSend){
+      switch(idCmdSend){
         case '0100': break; // modificar fecha
-        case '0400': break; // Modificar configuracion
+
+        case '0400': // Modificar configuracion 
+          var olt = convert.toHex(parseInt($('#olt').val()));
+          var odt = convert.toHex(parseInt($('#odt').val()));
+          var odtl = convert.toHex(parseInt($('#odtl').val()));
+          var odtln = convert.toHex(parseInt($('#odtln').val()));
+          alert(olt)                                                      
+          var paramsconfigHex = '235e'+'0400'+'607C75C6949360' + olt + odt + '010500020301' + odtln +'01020000'+'00143c3f' 
+                              /* 235e   0400   607C75C6949360     0a   0c      010500020301    14     01020000   00143c3f*/
+          alert(paramsconfigHex)
+          var paramsConfigASCII = convert.hex2ascii(paramsconfigHex)
+          alert(paramsConfigASCII)
+          connection.Write(paramsConfigASCII)
+        break;
+
         case '0A00': break; // Leer configuracion
         case '0500': break; // Agregar un usuario
         case '0600': break; // Eliminar un usuario 
@@ -186,8 +200,15 @@ $(document).on('click','#disconnect',function(e){
 
 $(document).on('click','#send',function(){
 	var cmd = convert.hex2ascii($('#textarea').val());
-    app.Write(cmd)
+  alert(cmd)
+    connection.Write(cmd)
 })
+
+$(document).on('click','#btn_config',function(){
+  //connection.Connect()
+  controller.sendCommand('0400')
+})
+
 
 $(document).on('click','#clear',function(){
 	$('.console').html('')
