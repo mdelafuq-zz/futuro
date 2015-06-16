@@ -1,16 +1,16 @@
 var socket;
 
 var connection = {
-    host: '',
-    port: 0,
+    host: '192.168.0.50',
+    port: 10001,
 
     Connect: function(){
-        connection.host = document.getElementById("host").value;
-        connection.port = document.getElementById("port").value;
-        if (connection.host == "" || connection.port == "") {
-            alert("No debe quedar campos vacios.");
-            return
-        }
+        // connection.host = document.getElementById("host").value;
+        // connection.port = document.getElementById("port").value;
+        // if (connection.host == "" || connection.port == "") {
+        //     alert("No debe quedar campos vacios.");
+        //     return
+        // }
         
         //aqui iba window.socket = new Socket()
 
@@ -18,8 +18,8 @@ var connection = {
             connection.host,
             connection.port,
             function(){
-                $('#connectedOn').html('Connected on ' + connection.host + ' on port ' + connection.port)
-                //alert("Conectado al servidor socket")
+                // $('#connectedOn').html('Connected on ' + connection.host + ' on port ' + connection.port)
+                alert("Conectado al servidor socket")
             },
             function(errorMessage) {
                 alert("Error during connection, error: " + errorMessage);
@@ -54,8 +54,8 @@ var connection = {
           response += convert.toHex( data[item] )
         }
 
-        $('.console').append(response);
-        $('.console').append('<br>');
+        // $('.console').append(response);
+        // $('.console').append('<br>');
         decode.slicer(response)
 
     }
@@ -79,6 +79,7 @@ var convert = {
     },
 
     toHex: function(unicodeValue){
+
         var hex = unicodeValue.toString(16)
         return convert.AddZero( hex , 2 )
     }
@@ -113,9 +114,9 @@ var decode = {
 
     CommandToRead: function(){
       switch(decode.idCmd){
-        case '0001': break; // estado actual
+        case '0001': alert('estado Actual'); break; // estado actual
         case '0100': break; // modificar fecha
-        case '0400': break; // Modificar configuracion
+        case '0400': alert('llego aqui'); break; // Modificar configuracion
         case '0A00': break; // Leer configuracion
         case '0500': break; // Agregar un usuario
         case '0600': break; // Eliminar un usuario 
@@ -134,7 +135,7 @@ var controller = {
       switch(idCmdSend){
         case '0100': break; // modificar fecha
 
-        case '0400': // Modificar configuracion 
+        case '0400': // Modificar configuracion
           var olt = convert.toHex(parseInt($('#olt').val()));
           var odt = convert.toHex(parseInt($('#odt').val()));
           var odtl = convert.toHex(parseInt($('#odtl').val()));
@@ -156,6 +157,48 @@ var controller = {
         case '0900': break; // Encender/apagar SP (SP1 luz, SP2 aire, SP3 opcional)
         default: alert('No se reconoce comando a envíar'); break;
       }
+    },
+
+    changeDate: function(){
+
+    },
+
+    changeSettings: function(olt, odt, odtl){
+        alert(olt)                                                      
+        var paramsconfigHex = '235e'+'0400'+'607C75C6949360' + olt + odt + '010500020301' + odtl +'01020000'+'00143c3f' 
+                            /* 235e   0400   607C75C6949360     0a   0c      010500020301    14     01020000   00143c3f*/
+        alert(paramsconfigHex)
+        var paramsConfigASCII = convert.hex2ascii(paramsconfigHex)
+        alert(paramsConfigASCII)
+        connection.Write(paramsConfigASCII)
+    },
+
+    readSettings: function(){
+
+    },
+
+    addUser: function(){
+
+    },
+
+    removeUser: function(){
+
+    },
+
+    readUsers: function(){
+
+    },
+
+    readLog: function(){
+
+    },
+
+    openDoor: function(){
+
+    },
+
+    toggleSP: function(){
+
     }
 }
 
@@ -205,8 +248,12 @@ $(document).on('click','#send',function(){
 })
 
 $(document).on('click','#btn_config',function(){
-  //connection.Connect()
-  controller.sendCommand('0400')
+  var olt = convert.toHex(parseInt($('#olt').val()));
+  var odt = convert.toHex(parseInt($('#odt').val()));
+  var odtl = convert.toHex(parseInt($('#odtl').val()));
+
+  connection.Connect()
+  controller.changeSettings(olt, odt, odtl)
 })
 
 
