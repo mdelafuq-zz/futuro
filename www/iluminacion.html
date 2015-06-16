@@ -14,7 +14,7 @@
     </head>
 
     <body>
-        <nav id='navbar' class="navbar navbar-fixed-top navbar-default menu hidden">
+        <nav class="navbar navbar-fixed-top navbar-default menu">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a class="navbar-brand" style="color:white;" href="#">Futuro Inteligente</a>
@@ -23,9 +23,15 @@
         </nav>
         
         <div id='container'>
+            <div id="iluminacion" class="col-xs-12 content" align='center'>
+                <div class='foco'>
+                    <i class="fa fa-lightbulb-o  fa-5x" name="focus" style='max-width:100%; max-height:inherit'></i></br>
+                    <input type="checkbox" name="checkbox_foco" checked="true">
+                </div>
+            </div>
         </div>
 
-        <footer id='footer' class="footer hidden">
+        <footer class="footer">
             <a href="#/acceso" class="a-nostyle">
                 <div class="footer-item footer-active col-xs-3 col-sm-3 col-md-3 col-lg-3">
                     <span class='span-vcenter'>
@@ -64,9 +70,9 @@
         <script src="assets/js/app.js"></script>
 
         <script>
-            $(function () {
-                app.Start()
-            })
+            // $(function () {
+            //     app.Start()
+            // })
         </script>
     </body>
 </html>

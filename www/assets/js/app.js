@@ -1,3 +1,131 @@
+app = {
+  Start: function(){
+    app.RegisterRoutes()
+    window.location = '#/acceso'
+    app.Sammy.run()
+    return
+  },
+
+  RegisterRoutes: function(){
+    app.Sammy = $.sammy('#container', function () {
+
+      this.get('/', function (context) { window.location = '#/acceso' })
+      this.get('#/?', function (context) { app.Show404() })
+
+      this.get('#/acceso/?', function (context) { app.Render.Access() })
+      this.get('#/iluminacion/?', function (context) { app.Render.Illumination() })
+      this.get('#/climatizacion/?', function (context) { app.Render.Climate() })
+      this.get('#/config/?', function (context) { app.Render.Config() })
+
+      // this.get('#/climatizacion/:id/?', function (context) { app.Resident.RenderRegulation(context.params['id']) })
+
+      this.notFound = function (context) { if (context !== 'post') { app.Show404() } }
+
+      this.swap = function (content, callback) {
+          var context = this
+          context.$element().fadeOut('150', function () {
+              context.$element().html(content).fadeIn('250', function () {
+
+                  if (callback) {
+                      callback.apply()
+                  }
+              })
+          })
+      }
+    })
+  },
+
+  Render:{},
+  Sammy: null
+}
+
+app.Render.Access = function(){
+  $('#navbar').removeClass('hidden')
+  $('#footer').removeClass('hidden')
+  
+  var html="";
+      html += "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; max-height:100%'>";
+      html += "    <div id='lock' style='max-height:100%'>";
+      html += "        <i class=\"fa fa-lock fa-3x\"><\/i>";
+      html += "    <\/div>";
+      html += "<\/div>";
+  app.Sammy.swap(html)
+}
+
+app.Render.Illumination = function(){
+  // if(encendido){
+  //   hasesto()
+  // }else{
+  //   haslotro()
+  // }
+
+  // encendido ? hazesto() : hazlotro()
+  // html += "        <input type=\"checkbox\" name=\"checkbox_foco\" checked='" (endendido ? 'true' : 'false' ) "'>";
+
+  var html="";
+      html += "<div id=\"iluminacion\" class=\"col-xs-12 content hidden\" align='center'>";
+      html += "    <div class='foco'>";
+      html += "        <i class=\"fa fa-lightbulb-o  fa-5x\" name=\"focus\" style='max-width:100%; max-height:inherit'><\/i><\/br>";
+      html += "        <input type=\"checkbox\" name=\"checkbox_foco\" checked='true'>";
+      html += "    <\/div>";
+      html += "<\/div>";
+  app.Sammy.swap(html,function(){
+      $("[name='checkbox_foco']").bootstrapSwitch();
+      $('#iluminacion').fadeIn()
+  })
+}
+
+app.Render.Climate = function(){
+  var html="";
+      html += "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; min-height:100%'>";
+      html += "    3   ";
+      html += "<\/div>";
+  app.Sammy.swap(html)
+}
+
+app.Render.Config = function(){
+  var html="";
+      html += "<a href=\"console.html\"  class=\"btn btn-info\" id=\"btn\" role=\"button\">Console mode<\/a>";
+      html += "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; min-height:100%'>";
+      html += "    <div class=\"panel panel-default\">";
+      html += "        <div class=\"panel-heading\" style=\"background-color: solid gray;\">";
+      html += "            <h3 class=\"panel-title\" style=\"text-align: center;\">Tiempos de acceso<\/h3>";
+      html += "        <\/div>";
+      html += "        <div class=\"panel-body\">";
+      html += "            <div class=\"form-group\">";
+      html += "                <input type=\"number\" class=\"form-control\" id=\"olt\" placeholder=\"Opening lock timer (seg)\" value=\"\">";
+      html += "            <\/div>";
+      html += "            <div class=\"form-group\">";
+      html += "                <input type=\"number\" class=\"form-control\" id=\"odt\" placeholder=\"Opening door timeout (seg)\" value=\"\">";
+      html += "            <\/div>";
+      html += "            <div class=\"form-group\">";
+      html += "                <input type=\"number\" class=\"form-control\" id=\"odtl\" placeholder=\"Opened door time limit (seg)\" value=\"\">";
+      html += "            <\/div>";
+      html += "            <div class=\"form-group\">";
+      html += "                <input type=\"number\" class=\"form-control\" id=\"odtln\" placeholder=\"Opened door time limit notifier (seg)\" value=\"\">";
+      html += "            <\/div>";
+      html += "            <button id=\"btn_config\" type=\"button\" class=\"btn btn-primary btn-lg btn-block\">Cambiar configuración<\/button>";
+      html += "        <\/div>";
+      html += "    <\/div>   ";
+      html += "<\/div>";
+      html += "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; min-height:100%'>";
+      html += "    <div class=\"panel panel-default\">";
+      html += "        <div class=\"panel-heading\" style=\"background-color: solid gray;\">";
+      html += "            <h3 class=\"panel-title\" style=\"text-align: center;\">Fecha y hora<\/h3>";
+      html += "        <\/div>";
+      html += "        <div class=\"panel-body\">";
+      html += "            <div class=\"form-group\">";
+      html += "                <input type=\"number\" class=\"form-control\" id=\"time\" placeholder=\"Opening lock timer (seg)\" value=\"\">";
+      html += "            <\/div>";
+      html += "            <button id=\"btn_hora\" type=\"button\" class=\"btn btn-primary btn-lg btn-block\">Modificar hora<\/button>";
+      html += "        <\/div>";
+      html += "    <\/div>   ";
+      html += "<\/div>";
+      html += "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" >";
+      html += "<\/div>";
+  app.Sammy.swap(html)
+}
+
 var socket;
 
 var connection = {
@@ -262,7 +390,6 @@ $(document).on('click','#clear',function(){
 })
 
 $(document).ready(function(){
-    $("[name='checkbox_foco']").bootstrapSwitch();
 })
 
 
