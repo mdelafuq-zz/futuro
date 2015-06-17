@@ -1,7 +1,7 @@
 app = {
   Start: function(){
     app.RegisterRoutes()
-    window.location = '#/acceso'
+    window.location = '#/connection'
     app.Sammy.run()
     return
   },
@@ -9,9 +9,10 @@ app = {
   RegisterRoutes: function(){
     app.Sammy = $.sammy('#container', function () {
 
-      this.get('/', function (context) { window.location = '#/acceso' })
+      this.get('/', function (context) { window.location = '#/connection' })
       this.get('#/?', function (context) { app.Show404() })
 
+      this.get('#/connection/?', function (context) { app.Render.Con() })
       this.get('#/acceso/?', function (context) { app.Render.Access() })
       this.get('#/iluminacion/?', function (context) { app.Render.Illumination() })
       this.get('#/climatizacion/?', function (context) { app.Render.Climate() })
@@ -37,6 +38,27 @@ app = {
 
   Render:{},
   Sammy: null
+}
+
+app.Render.Con = function(){
+  var html="";
+  html += "<div id=\"login\" class=\"col-xs-12 content\" align='center'>";
+  html += "    <div class=\"col-md-4\">";
+  html += "        <section class=\"login-form\">";
+  html += "            <form method=\"post\" action=\"#\" role=\"login\">";
+  html += "                <img src=\"assets\img\futuro.png\" class=\"img-responsive \" alt=\"\" \/><br>";
+  html += "                <input id=\"txtIP\" placeholder=\"IP Address\" required class=\"form-control input-lg\" value=\"192.168.0.69\" \/><br>";
+  html += "                <input class=\"form-control input-lg\" id=\"port\" placeholder=\"Port\" required=\"\" value=\"10001\" \/><br>";
+  html += "                <div class=\"pwstrength_viewport_progress\"><\/div><br>";
+  html += "                <button type=\"submit\" id=\"go\" class=\"btn btn-lg btn-primary btn-block\">Sign in<\/button><br>";
+  html += "                <div>";
+  html += "                    <a href=\"http:\/\/www.futurointeligente.com\/\">Futuro Inteligente!<\/a>";
+  html += "                <\/div>";
+  html += "            <\/form>";
+  html += "        <\/section>  ";
+  html += "    <\/div>";
+  html += "<\/div>";
+    app.Sammy.swap(html)
 }
 
 app.Render.Access = function(){
@@ -101,9 +123,6 @@ app.Render.Config = function(){
       html += "            <div class=\"form-group\">";
       html += "                <input type=\"number\" class=\"form-control\" id=\"odtl\" placeholder=\"Opened door time limit (seg)\" value=\"\">";
       html += "            <\/div>";
-      html += "            <div class=\"form-group\">";
-      html += "                <input type=\"number\" class=\"form-control\" id=\"odtln\" placeholder=\"Opened door time limit notifier (seg)\" value=\"\">";
-      html += "            <\/div>";
       html += "            <button id=\"btn_config\" type=\"button\" class=\"btn btn-primary btn-lg btn-block\">Cambiar configuración<\/button>";
       html += "        <\/div>";
       html += "    <\/div>   ";
@@ -114,10 +133,12 @@ app.Render.Config = function(){
       html += "            <h3 class=\"panel-title\" style=\"text-align: center;\">Fecha y hora<\/h3>";
       html += "        <\/div>";
       html += "        <div class=\"panel-body\">";
-      html += "            <div class=\"form-group\">";
-      html += "                <input type=\"number\" class=\"form-control\" id=\"time\" placeholder=\"Opening lock timer (seg)\" value=\"\">";
-      html += "            <\/div>";
-      html += "            <button id=\"btn_hora\" type=\"button\" class=\"btn btn-primary btn-lg btn-block\">Modificar hora<\/button>";
+      html += "             <div align=\"center\">";
+      html += "             <input type=\"datetime-local\" id=\"datetime\" value=\"\">";
+      html += "             <\/div><br>";
+      html += "             <div align=\"center\">";
+      html += "                 <button id=\"btn_hora\" type=\"button\" class=\"btn btn-primary btn-lg btn-block\">Modificar hora<\/button>";
+      html += "             <\/div>";
       html += "        <\/div>";
       html += "    <\/div>   ";
       html += "<\/div>";
@@ -129,16 +150,16 @@ app.Render.Config = function(){
 var socket;
 
 var connection = {
-    host: '192.168.0.50',
-    port: 10001,
 
+    host: '',
+    port: 0,
     Connect: function(){
-        // connection.host = document.getElementById("host").value;
-        // connection.port = document.getElementById("port").value;
-        // if (connection.host == "" || connection.port == "") {
-        //     alert("No debe quedar campos vacios.");
-        //     return
-        // }
+        connection.host = document.getElementById("txtIP").value;
+        connection.port = document.getElementById("Port").value;
+        if (connection.host == "" || connection.port == "") {
+            alert("No debe quedar campos vacios.");
+            return
+        }
         
         //aqui iba window.socket = new Socket()
 
@@ -147,10 +168,12 @@ var connection = {
             connection.port,
             function(){
                 // $('#connectedOn').html('Connected on ' + connection.host + ' on port ' + connection.port)
-                alert("Conectado al servidor socket")
+                alert("Conectado a la tarjeta inteligente")
+                window.location = '#/acceso'
             },
             function(errorMessage) {
                 alert("Error during connection, error: " + errorMessage);
+                window.location = '#/acceso'
             }
         );      
     },
@@ -240,18 +263,33 @@ var decode = {
       decode.CommandToRead()
     },
 
+    slicerdatetime:function(datetime){
+        var sec = "00"
+        var min = datetime.substr(-2, 2)
+        var hour = datetime.substr(-5, 2)
+        var dayWeek = "04"
+        var dayMonth = datetime.substr(8, 2)
+        var Month = datetime.substr(5, 2)
+        var year = datetime.substr(2, 2)
+
+        var paramsDateTime= sec.concat(min,hour,dayWeek,dayMonth,Month,year)
+        alert(paramsDateTime)
+        controller.changeDate(paramsDateTime)
+
+    },
+
     CommandToRead: function(){
-      switch(decode.idCmd){
-        case '0001': alert('estado Actual'); break; // estado actual
-        case '0100': break; // modificar fecha
-        case '0400': alert('llego aqui'); break; // Modificar configuracion
-        case '0A00': break; // Leer configuracion
-        case '0500': break; // Agregar un usuario
-        case '0600': break; // Eliminar un usuario 
-        case '0B00': break; // Descargar bitacora
-        case '0C00': break; // Descargar bloque de usuario (opcional si Admin)
-        case '0900': break; // Encender/apagar SP (SP1 luz, SP2 aire, SP3 opcional)
-        default: alert('La respuesta no puede ser interpretada'); break;
+        switch(decode.idCmd){
+          case '0001': alert('estado Actual'); break; // estado actual
+          case '0100': alert('Hora y fecha modificada con éxito'); break; // modificar fecha
+          case '0400': alert('Nueva configuracion agregada con éxito'); break; // Modificar configuracion
+          case '0A00': break; // Leer configuracion
+          case '0500': break; // Agregar un usuario
+          case '0600': break; // Eliminar un usuario 
+          case '0B00': break; // Descargar bitacora
+          case '0C00': break; // Descargar bloque de usuario (opcional si Admin)
+          case '0900': break; // Encender/apagar SP (SP1 luz, SP2 aire, SP3 opcional)
+          default: alert('La respuesta no puede ser interpretada'); break;
       }
     }
 
@@ -259,46 +297,20 @@ var decode = {
 
 var controller = {
 
-    sendCommand: function(idCmdSend){
-      switch(idCmdSend){
-        case '0100': break; // modificar fecha
-
-        case '0400': // Modificar configuracion
-          var olt = convert.toHex(parseInt($('#olt').val()));
-          var odt = convert.toHex(parseInt($('#odt').val()));
-          var odtl = convert.toHex(parseInt($('#odtl').val()));
-          var odtln = convert.toHex(parseInt($('#odtln').val()));
-          alert(olt)                                                      
-          var paramsconfigHex = '235e'+'0400'+'607C75C6949360' + olt + odt + '010500020301' + odtln +'01020000'+'00143c3f' 
-                              /* 235e   0400   607C75C6949360     0a   0c      010500020301    14     01020000   00143c3f*/
-          alert(paramsconfigHex)
-          var paramsConfigASCII = convert.hex2ascii(paramsconfigHex)
-          alert(paramsConfigASCII)
-          connection.Write(paramsConfigASCII)
-        break;
-
-        case '0A00': break; // Leer configuracion
-        case '0500': break; // Agregar un usuario
-        case '0600': break; // Eliminar un usuario 
-        case '0B00': break; // Descargar bitacora
-        case '0C00': break; // Descargar bloque de usuario (opcional si Admin)
-        case '0900': break; // Encender/apagar SP (SP1 luz, SP2 aire, SP3 opcional)
-        default: alert('No se reconoce comando a envíar'); break;
-      }
-    },
-
-    changeDate: function(){
-
+    changeDate: function(paramsDT){
+        var cmdChangeDate = convert.hex2ascii('235e'+'0100' + paramsDT + '00073c3f')
+        alert(cmdChangeDate)
+        connection.Write(cmdChangeDate)
     },
 
     changeSettings: function(olt, odt, odtl){
         alert(olt)                                                      
-        var paramsconfigHex = '235e'+'0400'+'607C75C6949360' + olt + odt + '010500020301' + odtl +'01020000'+'00143c3f' 
+        var cmdconfigHex = '235e'+'0400'+'607C75C6949360' + olt + odt + '010500020301' + odtl +'01020000'+'00143c3f' 
                             /* 235e   0400   607C75C6949360     0a   0c      010500020301    14     01020000   00143c3f*/
-        alert(paramsconfigHex)
-        var paramsConfigASCII = convert.hex2ascii(paramsconfigHex)
-        alert(paramsConfigASCII)
-        connection.Write(paramsConfigASCII)
+        alert(cmdconfigHex)
+        var paramsConfigASCII = convert.hex2ascii(cmdconfigHex)
+        alert(cmdConfigASCII)
+        connection.Write(cmdConfigASCII)
     },
 
     readSettings: function(){
@@ -364,16 +376,15 @@ $(document).on('click','#connect',function(e){
     connection.Connect()
 })
 
+$(document).on('click','#go',function(e){
+    connection.Connect()
+})
+
 $(document).on('click','#disconnect',function(e){
 	e.preventDefault()
 	connection.Disconnect()
 })
 
-$(document).on('click','#send',function(){
-	var cmd = convert.hex2ascii($('#textarea').val());
-  alert(cmd)
-    connection.Write(cmd)
-})
 
 $(document).on('click','#btn_config',function(){
   var olt = convert.toHex(parseInt($('#olt').val()));
@@ -384,12 +395,21 @@ $(document).on('click','#btn_config',function(){
   controller.changeSettings(olt, odt, odtl)
 })
 
+$(document).on('click','#btn_hora',function(){
+  var datetimeValue = document.getElementById("datetime").value;
+  console.log(datetimeValue)
+
+  connection.Connect()
+  decode.slicerdatetime(datetimeValue)
+})
+
+
+$(document).on('click','#send',function(){
+	var cmd = convert.hex2ascii($('#textarea').val());
+  alert(cmd)
+    connection.Write(cmd)
+})
 
 $(document).on('click','#clear',function(){
-	$('.console').html('')
+  $('.console').html('')
 })
-
-$(document).ready(function(){
-})
-
-

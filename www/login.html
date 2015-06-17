@@ -23,49 +23,21 @@
         </nav>
         
         <div id='container'>
-            <div id='config'>
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style='height:100%; min-height:100%'>
-                    <a href="console.html"  class="btn btn-info" id="btn" role="button">Console mode</a>
-                    <div class="panel panel-default">
-                        <div class="panel-heading" style="background-color: solid gray;">
-                            <h3 class="panel-title" style="text-align: center;">Tiempos de acceso</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="form-group">
-                                <input type="number" class="form-control" id="olt" placeholder="Opening lock timer (seg)" value="">
+            <div id="login" class="col-xs-12 content" align='center'>
+                <div class="col-md-4">
+                    <section class="login-form">
+                        <form method="post" action="#" role="login">
+                            <img src="assets\img\futuro.png" class="img-responsive " alt="" /><br>
+                            <input id="txtIP" placeholder="IP Address" required class="form-control input-lg" value="192.168.0.69" /><br>
+                            <input class="form-control input-lg" id="port" placeholder="Port" required="" value="10001" /><br>
+                            <div class="pwstrength_viewport_progress"></div><br>
+                            <button type="submit" id="go" class="btn btn-lg btn-primary btn-block">Sign in</button><br>
+                            <div>
+                                <a href="http://www.futurointeligente.com/">Futuro Inteligente!</a>
                             </div>
-                            <div class="form-group">
-                                <input type="number" class="form-control" id="odt" placeholder="Opening door timeout (seg)" value="">
-                            </div>
-                            <div class="form-group">
-                                <input type="number" class="form-control" id="odtl" placeholder="Opened door time limit (seg)" value="">
-                            </div>
-                            <div class="form-group">
-                                <input type="number" class="form-control" id="odtln" placeholder="Opened door time limit notifier (seg)" value="">
-                            </div>
-                            <button id="btn_config" type="button" class="btn btn-primary btn-lg btn-block">Cambiar configuración</button>
-                        </div>
-                    </div>   
+                        </form>
+                    </section>  
                 </div>
-
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style='height:100%; min-height:100%'>
-                    <div class="panel panel-default">
-                        <div class="panel-heading" style="background-color: solid gray;">
-                            <h3 class="panel-title" style="text-align: center;">Fecha y hora</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div align="center">
-                                <input type="datetime-local" name="bdaytime"><br>
-                            </div><br>
-                            <div align="center">
-                                <button id="btn_hora" type="button" class="btn btn-primary btn-lg btn-block">Modificar hora</button>
-                            </div>
-                        </div>
-                    </div>   
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
-                </div>
-                                
             </div>
         </div>
 
