@@ -7,7 +7,7 @@ app = {
   },
 
   RegisterRoutes: function(){
-    app.Sammy = $.sammy('#container', function () {
+    app.Sammy = $.sammy('#app-container', function () {
 
       this.get('/', function (context) { window.location = '#/connection' })
       this.get('#/?', function (context) { app.Show404() })
@@ -413,3 +413,5 @@ $(document).on('click','#send',function(){
 $(document).on('click','#clear',function(){
   $('.console').html('')
 })
+
+.prop('checked',true)
