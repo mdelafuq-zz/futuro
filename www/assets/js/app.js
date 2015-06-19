@@ -37,7 +37,12 @@ app = {
   },
 
   Render:{},
-  Sammy: null
+  Sammy: null,
+  Globals:{
+    Door: false,
+    SP1: false,
+    SP2: false
+  }
 }
 
 app.Render.Con = function(){
