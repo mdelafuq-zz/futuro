@@ -7,7 +7,7 @@ app = {
   },
 
   RegisterRoutes: function(){
-    app.Sammy = $.sammy('#container', function () {
+    app.Sammy = $.sammy('#app-container', function () {
 
       this.get('/', function (context) { window.location = '#/connection' })
       this.get('#/?', function (context) { app.Show404() })
@@ -444,6 +444,7 @@ $(document).on('click','#clear',function(){
   $('.console').html('')
 })
 
+<<<<<<< HEAD
 $(document).on('submit','#logform',function(e){
   e.preventDefault()
   // window.location = 'acceso.html'
@@ -451,3 +452,6 @@ $(document).on('submit','#logform',function(e){
 })
 
 
+=======
+.prop('checked',true)
+>>>>>>> origin/master
