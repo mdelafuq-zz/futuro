@@ -37,7 +37,8 @@ app = {
   },
 
   Render:{},
-  Sammy: null
+  Sammy: null,
+  counter:0
 }
 
 app.Render.Con = function(){
@@ -45,12 +46,12 @@ app.Render.Con = function(){
   html += "<div id=\"login\" class=\"col-xs-12 content\" align='center'>";
   html += "    <div class=\"col-md-4\">";
   html += "        <section class=\"login-form\">";
-  html += "            <form method=\"post\" action=\"#\" role=\"login\">";
-  html += "                <img src=\"assets\img\futuro.png\" class=\"img-responsive \" alt=\"\" \/><br>";
+  html += "            <form id='logform' method=\"post\" action=\"#\" role=\"login\">";
+  html += "                <img src='assets/img/futuro.png' class=\"img-responsive\" alt=\"\" \/><br>";
   html += "                <input id=\"txtIP\" placeholder=\"IP Address\" required class=\"form-control input-lg\" value=\"192.168.0.69\" \/><br>";
   html += "                <input class=\"form-control input-lg\" id=\"port\" placeholder=\"Port\" required=\"\" value=\"10001\" \/><br>";
   html += "                <div class=\"pwstrength_viewport_progress\"><\/div><br>";
-  html += "                <button type=\"submit\" id=\"go\" class=\"btn btn-lg btn-primary btn-block\">Sign in<\/button><br>";
+  html += "                <button type=\"submit\" class=\"btn btn-lg btn-primary btn-block\">Sign in<\/button><br>";
   html += "                <div>";
   html += "                    <a href=\"http:\/\/www.futurointeligente.com\/\">Futuro Inteligente!<\/a>";
   html += "                <\/div>";
@@ -58,7 +59,7 @@ app.Render.Con = function(){
   html += "        <\/section>  ";
   html += "    <\/div>";
   html += "<\/div>";
-    app.Sammy.swap(html)
+  app.Sammy.swap(html)
 }
 
 app.Render.Access = function(){
@@ -149,24 +150,28 @@ app.Render.Config = function(){
 
 var socket;
 
+var global = {
+    completeResp:'',
+    responseArray:[]
+}
+
 var connection = {
 
-    host: '',
-    port: 0,
+    host: '192.168.0.50',
+    port: 10001,
     Connect: function(){
-        connection.host = document.getElementById("txtIP").value;
-        connection.port = document.getElementById("Port").value;
-        if (connection.host == "" || connection.port == "") {
-            alert("No debe quedar campos vacios.");
-            return
-        }
-        
-        //aqui iba window.socket = new Socket()
+        // connection.host = document.getElementById("txtIP").value;
+        // connection.port = document.getElementById("Port").value;
+        // if (connection.host == "" || connection.port == "") {
+        //     alert("No debe quedar campos vacios.");
+        //     return
+        // }
 
         window.socket.open(
             connection.host,
             connection.port,
             function(){
+
                 // $('#connectedOn').html('Connected on ' + connection.host + ' on port ' + connection.port)
                 alert("Conectado a la tarjeta inteligente")
                 window.location = '#/acceso'
@@ -200,14 +205,20 @@ var connection = {
     },
 
     Read: function (data) {
+        // app.counter++
+        // alert(app.counter)
+        // var response=[]
         var response = ''
         for (var item in data){
           response += convert.toHex( data[item] )
+          // response.push(convert.toHex( data[item] ))
         }
-
+        // response.join('')
+        // alert(response)
         // $('.console').append(response);
         // $('.console').append('<br>');
-        decode.slicer(response)
+        // decode.slicer(response)
+        decode.fixResponse(response)
 
     }
 }
@@ -246,19 +257,19 @@ var decode = {
 
     slicer: function(response){
       response.length
-
+      // alert(response)
       decode.start = response.substr(0, 4)
-      //alert(decode.start)
+      // alert(decode.start)
       decode.serialNo = response.substr(4, 16)
-      //alert(decode.serialNo)
+      // alert(decode.serialNo)
       decode.idCmd = response.substr(20, 4)
-      //alert(decode.idCmd)
+      // alert(decode.idCmd)
       decode.ACK = response.substring(24, response.length-8);
-      //alert(decode.ACK)
+      // alert(decode.ACK)
       decode.checksum = response.substr(response.length-8, 4)
-      //alert(decode.checksum)
+      // alert(decode.checksum)
       decode.end = response.substr(response.length-4, 4)
-      //alert(decode.end)
+      // alert(decode.end)
 
       decode.CommandToRead()
     },
@@ -276,6 +287,27 @@ var decode = {
         alert(paramsDateTime)
         controller.changeDate(paramsDateTime)
 
+    },
+
+    fixResponse: function(incompResp){
+      var startResp = incompResp.substr(0, 4)
+      // alert(startResp)
+      var endResp = incompResp.substr(incompResp.length-4, 4)
+      // alert(endResp)
+
+      if (startResp =='235e' && endResp =='3c3f') {
+          global.completeResp = incompResp
+          alert(global.completeResp)
+          decode.slicer(global.completeResp)
+          global.completeResp = ''
+      }else if (startResp == '235e' && endResp != '3c3f' || startResp != '235e' && endResp != '3c3f'|| startResp != '235e') {
+          global.responseArray.push(incompResp)
+          // alert(global.responseArray.join(''))
+          if (endResp == '3c3f' ) {
+              decode.slicer(global.responseArray.join(''))
+              global.responseArray=[]
+          } 
+      }
     },
 
     CommandToRead: function(){
@@ -303,14 +335,13 @@ var controller = {
         connection.Write(cmdChangeDate)
     },
 
-    changeSettings: function(olt, odt, odtl){
-        alert(olt)                                                      
+    changeSettings: function(olt, odt, odtl){                                                     
         var cmdconfigHex = '235e'+'0400'+'607C75C6949360' + olt + odt + '010500020301' + odtl +'01020000'+'00143c3f' 
                             /* 235e   0400   607C75C6949360     0a   0c      010500020301    14     01020000   00143c3f*/
         alert(cmdconfigHex)
         var paramsConfigASCII = convert.hex2ascii(cmdconfigHex)
-        alert(cmdConfigASCII)
-        connection.Write(cmdConfigASCII)
+        alert(paramsConfigASCII)
+        connection.Write(paramsConfigASCII)
     },
 
     readSettings: function(){
@@ -358,12 +389,17 @@ function onDeviceReady() {
     };
 }
 
-$(document).on('switchChange.bootstrapSwitch','input[name="my-checkbox"]', function(event, state) {
-  console.window(this); // DOM element
-  console.log(event); // jQuery event
-  console.log(state); // true | false
-});
+  // $(function() {
+  //   $('#chkb').bootstrapToggle({
+  //     on: 'Enabled',
+  //     off: 'Disabled'
+  //   });
+  // })
 
+  $('chkb').prop('checked',true, function(){
+    alert('check box activado')
+  })
+    
 
 /*funcion solo para el menu*/
 $('.footer').on('click','.footer-item',function(){
@@ -373,10 +409,6 @@ $('.footer').on('click','.footer-item',function(){
 
 $(document).on('click','#connect',function(e){
 	e.preventDefault()
-    connection.Connect()
-})
-
-$(document).on('click','#go',function(e){
     connection.Connect()
 })
 
@@ -391,7 +423,6 @@ $(document).on('click','#btn_config',function(){
   var odt = convert.toHex(parseInt($('#odt').val()));
   var odtl = convert.toHex(parseInt($('#odtl').val()));
 
-  connection.Connect()
   controller.changeSettings(olt, odt, odtl)
 })
 
@@ -399,7 +430,6 @@ $(document).on('click','#btn_hora',function(){
   var datetimeValue = document.getElementById("datetime").value;
   console.log(datetimeValue)
 
-  connection.Connect()
   decode.slicerdatetime(datetimeValue)
 })
 
@@ -413,3 +443,11 @@ $(document).on('click','#send',function(){
 $(document).on('click','#clear',function(){
   $('.console').html('')
 })
+
+$(document).on('submit','#logform',function(e){
+  e.preventDefault()
+  // window.location = 'acceso.html'
+  connection.Connect()
+})
+
+
