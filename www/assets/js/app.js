@@ -38,7 +38,15 @@ app = {
 
   Render:{},
   Sammy: null,
+<<<<<<< HEAD
   counter:0
+=======
+  Globals:{
+    Door: false,
+    SP1: false,
+    SP2: false
+  }
+>>>>>>> origin/master
 }
 
 app.Render.Con = function(){
