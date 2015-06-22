@@ -7,7 +7,7 @@ app = {
   },
 
   RegisterRoutes: function(){
-    app.Sammy = $.sammy('#container', function () {
+    app.Sammy = $.sammy('#app-container', function () {
 
       this.get('/', function (context) { window.location = '#/connection' })
       this.get('#/?', function (context) { app.Show404() })
@@ -39,6 +39,12 @@ app = {
   Render:{},
   Sammy: null,
   counter:0
+
+  // Globals:{
+  //   Door: false,
+  //   SP1: false,
+  //   SP2: false
+  // }
 }
 
 app.Render.Con = function(){
@@ -88,12 +94,14 @@ app.Render.Illumination = function(){
   var html="";
       html += "<div id=\"iluminacion\" class=\"col-xs-12 content hidden\" align='center'>";
       html += "    <div class='foco'>";
-      html += "        <i class=\"fa fa-lightbulb-o  fa-5x\" name=\"focus\" style='max-width:100%; max-height:inherit'><\/i><\/br>";
-      html += "        <input type=\"checkbox\" name=\"checkbox_foco\" checked='true'>";
+      html += "        <i class=\"fa fa-lightbulb-o  fa-5x\" id=\"focus\" style='max-width:100%; max-height:inherit'><\/i>";
+      html += "    <\/div>";
+      html += "    <div>";
+      html += "        <input id=\"ckbx_ilum\" type=\"checkbox\" checked data-toggle=\"toggle\">";
       html += "    <\/div>";
       html += "<\/div>";
   app.Sammy.swap(html,function(){
-      $("[name='checkbox_foco']").bootstrapSwitch();
+      $('#ckbx_ilum').bootstrapToggle();
       $('#iluminacion').fadeIn()
   })
 }
@@ -108,56 +116,62 @@ app.Render.Climate = function(){
 
 app.Render.Config = function(){
   var html="";
-      html += "<a href=\"console.html\"  class=\"btn btn-info\" id=\"btn\" role=\"button\">Console mode<\/a>";
-      html += "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; min-height:100%'>";
-      html += "    <div class=\"panel panel-default\">";
-      html += "        <div class=\"panel-heading\" style=\"background-color: solid gray;\">";
-      html += "            <h3 class=\"panel-title\" style=\"text-align: center;\">Tiempos de acceso<\/h3>";
-      html += "        <\/div>";
-      html += "        <div class=\"panel-body\">";
-      html += "            <div class=\"form-group\">";
-      html += "                <input type=\"number\" class=\"form-control\" id=\"olt\" placeholder=\"Opening lock timer (seg)\" value=\"\">";
-      html += "            <\/div>";
-      html += "            <div class=\"form-group\">";
-      html += "                <input type=\"number\" class=\"form-control\" id=\"odt\" placeholder=\"Opening door timeout (seg)\" value=\"\">";
-      html += "            <\/div>";
-      html += "            <div class=\"form-group\">";
-      html += "                <input type=\"number\" class=\"form-control\" id=\"odtl\" placeholder=\"Opened door time limit (seg)\" value=\"\">";
-      html += "            <\/div>";
-      html += "            <button id=\"btn_config\" type=\"button\" class=\"btn btn-primary btn-lg btn-block\">Cambiar configuración<\/button>";
-      html += "        <\/div>";
-      html += "    <\/div>   ";
-      html += "<\/div>";
-      html += "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; min-height:100%'>";
-      html += "    <div class=\"panel panel-default\">";
-      html += "        <div class=\"panel-heading\" style=\"background-color: solid gray;\">";
-      html += "            <h3 class=\"panel-title\" style=\"text-align: center;\">Fecha y hora<\/h3>";
-      html += "        <\/div>";
-      html += "        <div class=\"panel-body\">";
-      html += "             <div align=\"center\">";
-      html += "             <input type=\"datetime-local\" id=\"datetime\" value=\"\">";
-      html += "             <\/div><br>";
-      html += "             <div align=\"center\">";
-      html += "                 <button id=\"btn_hora\" type=\"button\" class=\"btn btn-primary btn-lg btn-block\">Modificar hora<\/button>";
-      html += "             <\/div>";
-      html += "        <\/div>";
-      html += "    <\/div>   ";
-      html += "<\/div>";
-      html += "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" >";
-      html += "<\/div>";
-  app.Sammy.swap(html)
+  html += "<div id='config'>";
+  html += "     <div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; min-height:100%'>";
+  html += "         <a href=\"console.html\"  class=\"btn btn-info\" id=\"btn\" role=\"button\">Console mode<\/a>";
+  html += "         <div class=\"panel panel-default\">";
+  html += "             <div class=\"panel-heading\" style=\"background-color: solid gray;\">";
+  html += "                 <h3 class=\"panel-title\" style=\"text-align: center;\">Tiempos de acceso<\/h3>";
+  html += "             <\/div>";
+  html += "             <div class=\"panel-body\">";
+  html += "                 <div class=\"form-group\">";
+  html += "                     <input type=\"number\" class=\"form-control\" id=\"olt\" placeholder=\"Opening lock timer (seg)\" value=\"\">";
+  html += "                 <\/div>";
+  html += "                 <div class=\"form-group\">";
+  html += "                     <input type=\"number\" class=\"form-control\" id=\"odt\" placeholder=\"Opening door timeout (seg)\" value=\"\">";
+  html += "                 <\/div>";
+  html += "                 <div class=\"form-group\">";
+  html += "                     <input type=\"number\" class=\"form-control\" id=\"odtl\" placeholder=\"Opened door time limit (seg)\" value=\"\">";
+  html += "                 <\/div>";
+  html += "                 <button id=\"btn_config\" type=\"button\" class=\"btn btn-primary btn-lg btn-block\">Cambiar configuración<\/button>";
+  html += "             <\/div>";
+  html += "         <\/div>   ";
+  html += "     <\/div>";
+  html += "     <div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; min-height:100%'>";
+  html += "         <div class=\"panel panel-default\">";
+  html += "             <div class=\"panel-heading\" style=\"background-color: solid gray;\">";
+  html += "                 <h3 class=\"panel-title\" style=\"text-align: center;\">Fecha y hora<\/h3>";
+  html += "             <\/div>";
+  html += "             <div class=\"panel-body\">";
+  html += "                 <div align=\"center\">";
+  html += "                     <input type=\"datetime-local\" id=\"datetime\"><br>";
+  html += "                 <\/div><br>";
+  html += "                 <div align=\"center\">";
+  html += "                     <button id=\"btn_hora\" type=\"button\" class=\"btn btn-primary btn-lg btn-block\">Modificar hora<\/button>";
+  html += "                 <\/div>";
+  html += "             <\/div>";
+  html += "         <\/div>";
+  html += "     <\/div>";
+  html += " <\/div>";
+    app.Sammy.swap(html)
+    controller.readSettings()
 }
 
 var socket;
 
 var global = {
     completeResp:'',
-    responseArray:[]
+    responseArray:[],
+    flagOnOfSP: '',
+    timeRead: '',
+    oltRead: '',
+    odtRead: '',
+    odtlRead: ''
 }
 
 var connection = {
 
-    host: '192.168.0.50',
+    host: '192.168.0.69',
     port: 10001,
     Connect: function(){
         // connection.host = document.getElementById("txtIP").value;
@@ -171,14 +185,13 @@ var connection = {
             connection.host,
             connection.port,
             function(){
-
                 // $('#connectedOn').html('Connected on ' + connection.host + ' on port ' + connection.port)
                 alert("Conectado a la tarjeta inteligente")
                 window.location = '#/acceso'
             },
             function(errorMessage) {
                 alert("Error during connection, error: " + errorMessage);
-                window.location = '#/acceso'
+                window.location = '#/connection'
             }
         );      
     },
@@ -256,6 +269,7 @@ var decode = {
     end: '',
 
     slicer: function(response){
+      // alert(response)
       response.length
       // alert(response)
       decode.start = response.substr(0, 4)
@@ -270,7 +284,7 @@ var decode = {
       // alert(decode.checksum)
       decode.end = response.substr(response.length-4, 4)
       // alert(decode.end)
-
+      global.responseArray.length = 0
       decode.CommandToRead()
     },
 
@@ -284,43 +298,98 @@ var decode = {
         var year = datetime.substr(2, 2)
 
         var paramsDateTime= sec.concat(min,hour,dayWeek,dayMonth,Month,year)
-        alert(paramsDateTime)
+        // alert(paramsDateTime)
         controller.changeDate(paramsDateTime)
 
     },
 
     fixResponse: function(incompResp){
-      var startResp = incompResp.substr(0, 4)
-      // alert(startResp)
-      var endResp = incompResp.substr(incompResp.length-4, 4)
-      // alert(endResp)
+        var startResp = incompResp.substr(0, 4)
+        // alert(startResp)
+        var endResp = incompResp.substr(incompResp.length-4, 4)
+        // alert(endResp)
 
-      if (startResp =='235e' && endResp =='3c3f') {
-          global.completeResp = incompResp
-          alert(global.completeResp)
-          decode.slicer(global.completeResp)
-          global.completeResp = ''
-      }else if (startResp == '235e' && endResp != '3c3f' || startResp != '235e' && endResp != '3c3f'|| startResp != '235e') {
-          global.responseArray.push(incompResp)
-          // alert(global.responseArray.join(''))
-          if (endResp == '3c3f' ) {
-              decode.slicer(global.responseArray.join(''))
-              global.responseArray=[]
-          } 
-      }
+        if (startResp =='235e' && endResp =='3c3f') {
+            global.completeResp = incompResp
+            decode.slicer(global.completeResp)
+            // alert('Respuesta completa: ' + global.completeResp)
+            global.completeResp = ''
+        }else if (startResp == '235e' && endResp != '3c3f' || startResp != '235e' && endResp != '3c3f'|| startResp != '235e') {
+            global.responseArray.push(incompResp)
+            global.completeResp = global.responseArray.join('')
+            var startArray = global.completeResp.substr(0, 4)
+            var endArray = global.completeResp.substr(global.completeResp.length-4, 4)
+
+            if (startArray == '235e' && endArray == '3c3f') {
+                decode.slicer(global.completeResp)
+                global.responseArray.length = 0
+                global.completeResp = ''
+            }
+        }
     },
 
     CommandToRead: function(){
         switch(decode.idCmd){
-          case '0001': alert('estado Actual'); break; // estado actual
-          case '0100': alert('Hora y fecha modificada con éxito'); break; // modificar fecha
-          case '0400': alert('Nueva configuracion agregada con éxito'); break; // Modificar configuracion
-          case '0A00': break; // Leer configuracion
+          case '0001': // estado actual
+              var ACKstate = decode.ACK
+              // alert(ACKstate)
+              var secRead = ACKstate.substr(10, 2)
+              var minRead = ACKstate.substr(12, 2)
+              var hourRead = ACKstate.substr(14, 2)
+              var dayMonthRead = ACKstate.substr(18, 2)
+              var MonthRead = ACKstate.substr(20, 2)
+              var yearRead = ACKstate.substr(22, 2)
+
+              global.timeRead = '20'+ yearRead +'-'+ MonthRead +'-'+ dayMonthRead +'T'+ hourRead +':'+ minRead +':'+ secRead
+              document.getElementById("datetime").value = global.timeRead
+              ACKstate = ''
+          break; 
+          case '0100': // modificar fecha
+              if (decode.ACK == '01') {
+                  alert('Hora y fecha modificada con éxito')
+              }else{alert('Error al modificar hora y fecha');}
+          break; 
+          case '0400': // Modificar configuracion
+              if (decode.ACK == '01') {
+                  alert('Nueva configuracion agregada con éxito')
+              }else{alert('Error al agregar configuracion');}
+          break; 
+          case '0a00': // Leer configuracion
+              alert(decode.ACK)
+              var oltRead = decode.ACK.substr(14, 2)
+              alert(oltRead)
+              var odtRead = decode.ACK.substr(16, 2)
+              alert(odtRead)
+              var odtlRead = decode.ACK.substr(30, 2)
+              alert(odtlRead)
+              document.getElementById("olt").text = oltRead
+              document.getElementById("odt").text = odtRead
+              document.getElementById("odtl").text = odtlRead
+          break; 
           case '0500': break; // Agregar un usuario
           case '0600': break; // Eliminar un usuario 
-          case '0B00': break; // Descargar bitacora
-          case '0C00': break; // Descargar bloque de usuario (opcional si Admin)
-          case '0900': break; // Encender/apagar SP (SP1 luz, SP2 aire, SP3 opcional)
+          case '0b00': break; // Descargar bitacora
+          case '0c00': break; // Descargar bloque de usuario (opcional si Admin)
+          case '0900': // Encender/apagar SP (SP1 luz, SP2 aire, SP3 opcional)
+              switch (decode.ACK){
+                  case '00':
+                      alert('Error al intentar utilizar SP');
+                      $('#ckbx_ilum').bootstrapToggle('off')
+                  break;
+                  case '01':
+                      if (global.flagOnOfSP == 'SP200') {
+                          alert('Foco encendido');
+                          // document.getElementById('focus').style.color="#E5CA19";
+                          global.flagOnOfSP = ''
+                      }else if (global.flagOnOfSP == 'SP201'){
+                          alert('Foco apagado');
+                          // document.getElementById('focus').style.color="#333";
+                          global.flagOnOfSP = ''
+                      }
+                  break;
+                  default: alert('La respuesta no puede ser interpretada SP'); break;
+              }
+          break; 
           default: alert('La respuesta no puede ser interpretada'); break;
       }
     }
@@ -331,21 +400,22 @@ var controller = {
 
     changeDate: function(paramsDT){
         var cmdChangeDate = convert.hex2ascii('235e'+'0100' + paramsDT + '00073c3f')
-        alert(cmdChangeDate)
+        // alert(cmdChangeDate)
         connection.Write(cmdChangeDate)
     },
 
     changeSettings: function(olt, odt, odtl){                                                     
         var cmdconfigHex = '235e'+'0400'+'607C75C6949360' + olt + odt + '010500020301' + odtl +'01020000'+'00143c3f' 
-                            /* 235e   0400   607C75C6949360     0a   0c      010500020301    14     01020000   00143c3f*/
-        alert(cmdconfigHex)
+                         /* 235e   0400   607C75C6949360     0a   0c      010500020301    14     01020000   00143c3f*/
+        // alert(cmdconfigHex)
         var paramsConfigASCII = convert.hex2ascii(cmdconfigHex)
-        alert(paramsConfigASCII)
+        // alert(paramsConfigASCII)
         connection.Write(paramsConfigASCII)
     },
 
     readSettings: function(){
-
+        var cmdRedConfig = convert.hex2ascii("235e0a0000003c3f")
+        connection.Write(cmdRedConfig)
     },
 
     addUser: function(){
@@ -353,6 +423,10 @@ var controller = {
     },
 
     removeUser: function(){
+
+    },
+
+    downloadUser: function(){
 
     },
 
@@ -368,8 +442,26 @@ var controller = {
 
     },
 
-    toggleSP: function(){
+    toggleSP: function(paramsSP){
+        switch(paramsSP){
+            case '00':// encender SP2 ILUMINACION
+                var cmdOnSP2 = convert.hex2ascii("235e09000000013c3f")
+                // alert(cmdOnSP2)
+                connection.Write(cmdOnSP2)
+            break; 
+            case '01':// apagar SP2 ILUMINACION
+                var cmdOfSP2 = convert.hex2ascii("235e09000100013c3f")
+                // alert(cmdOfSP2)
+                connection.Write(cmdOfSP2)
+            break; 
+            case '02':// encender SP3
 
+            break; 
+            case '03':// apagar SP3
+
+            break; 
+            default: alert('La tarea no puede ser interpretada'); break;
+        }
     }
 }
 
@@ -388,18 +480,6 @@ function onDeviceReady() {
         setDisconnected();
     };
 }
-
-  // $(function() {
-  //   $('#chkb').bootstrapToggle({
-  //     on: 'Enabled',
-  //     off: 'Disabled'
-  //   });
-  // })
-
-  $('chkb').prop('checked',true, function(){
-    alert('check box activado')
-  })
-    
 
 /*funcion solo para el menu*/
 $('.footer').on('click','.footer-item',function(){
@@ -433,7 +513,6 @@ $(document).on('click','#btn_hora',function(){
   decode.slicerdatetime(datetimeValue)
 })
 
-
 $(document).on('click','#send',function(){
 	var cmd = convert.hex2ascii($('#textarea').val());
   alert(cmd)
@@ -451,3 +530,24 @@ $(document).on('submit','#logform',function(e){
 })
 
 
+$(document).on('change','#ckbx_ilum', function(){
+    if ( this.checked /*$(this).prop('checked')==true*/) {
+        ilum = 'true'
+        global.flagOnOfSP = 'SP200'
+        controller.toggleSP('00') //encender sp2 ILUMINACION
+    }else{
+        global.flagOnOfSP = 'SP201'
+        controller.toggleSP('01') //apagar sp2 ILUMINACION
+    }
+})
+
+// $(document).on('change','#chcbox',function(){ //ILUMINACION.HTML
+//     // access properties using this keyword
+//     if ( this.checked ) {
+//         // if checked ...
+//         alert( this.checked);
+//     } else {
+//         // if not checked ...
+//         alert(this.checked)
+//     }
+// });

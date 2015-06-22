@@ -9,6 +9,10 @@ body {
 	background: #eeeeee;
 }
 
+/*#focus{
+	color: #E5CA19!important;
+}*/
+
 #app-container{
 	height:inherit;
 	padding-bottom:67.5px;
