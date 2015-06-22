@@ -69,8 +69,6 @@ app.Render.Con = function(){
 }
 
 app.Render.Access = function(){
-<<<<<<< HEAD
-    // controller.readUsers()
     $('#navbar').removeClass('hidden')
     $('#footer').removeClass('hidden')
     
@@ -81,7 +79,6 @@ app.Render.Access = function(){
         html += "    <\/div>";
         html += "<\/div>";
     app.Sammy.swap(html)
-=======
   $('#navbar').removeClass('hidden')
   $('#footer').removeClass('hidden')
   
@@ -92,7 +89,6 @@ app.Render.Access = function(){
       html += "    <\/div>";
       html += "<\/div>";
   app.Sammy.swap(html)
->>>>>>> origin/master
 }
 
 app.Render.Illumination = function(){
@@ -384,16 +380,14 @@ var decode = {
               var oltRead = decode.ACK.substr(14, 2)
               var odtRead = decode.ACK.substr(16, 2)
               var odtlRead = decode.ACK.substr(30, 2)
-<<<<<<< HEAD
-              alert(odtlRead)
+
               document.getElementById("olt").value = oltRead
               document.getElementById("odt").value = odtRead
               document.getElementById("odtl").value = odtlRead
-=======
+
               $('#olt').val(oltRead)
               $('#odt').val(odtRead)
               $('#odtl').val(odtlRead)
->>>>>>> origin/master
           break; 
           case '0500': break; // Agregar un usuario
           case '0600': break; // Eliminar un usuario 
@@ -435,11 +429,7 @@ var controller = {
         connection.Write(cmdChangeDate)
     },
 
-<<<<<<< HEAD
-    changeSettings: function(olt, odt, odtl){ //LISTO
-=======
     changeSettings: function(olt, odt, odtl){
->>>>>>> origin/master
         var cmdconfigHex = '235e'+'0400'+'607C75C6949360' + olt + odt + '010500020301' + odtl +'01020000'+'00143c3f' 
                          /* 235e   0400   607C75C6949360     0a   0c      010500020301    14     01020000   00143c3f*/
         // alert(cmdconfigHex)
