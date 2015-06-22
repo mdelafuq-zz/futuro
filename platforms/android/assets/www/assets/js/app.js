@@ -69,6 +69,7 @@ app.Render.Con = function(){
 }
 
 app.Render.Access = function(){
+<<<<<<< HEAD
     $('#navbar').removeClass('hidden')
     $('#footer').removeClass('hidden')
     
@@ -79,6 +80,9 @@ app.Render.Access = function(){
         html += "    <\/div>";
         html += "<\/div>";
     app.Sammy.swap(html)
+=======
+    // controller.readUsers()
+>>>>>>> origin/master
   $('#navbar').removeClass('hidden')
   $('#footer').removeClass('hidden')
   
@@ -380,11 +384,14 @@ var decode = {
               var oltRead = decode.ACK.substr(14, 2)
               var odtRead = decode.ACK.substr(16, 2)
               var odtlRead = decode.ACK.substr(30, 2)
+<<<<<<< HEAD
 
               document.getElementById("olt").value = oltRead
               document.getElementById("odt").value = odtRead
               document.getElementById("odtl").value = odtlRead
 
+=======
+>>>>>>> origin/master
               $('#olt').val(oltRead)
               $('#odt').val(odtRead)
               $('#odtl').val(odtlRead)
@@ -415,6 +422,13 @@ var decode = {
                   default: alert('La respuesta no puede ser interpretada SP'); break;
               }
           break; 
+          case '1100':
+              if(decode.ACK === '01'){
+                  alert('Cerradura abierta')
+              }else{
+                  alert('No se pudo ejecutar el comando')
+              }
+          break;
           default: alert('La respuesta no puede ser interpretada'); break;
       }
     }
@@ -461,7 +475,8 @@ var controller = {
     },
 
     openDoor: function(){
-
+        var cmdOpenDoor = convert.hex2ascii('235e110000003c3f')
+        connection.Write(cmdOpenDoor)
     },
 
     toggleSP: function(paramsSP){ //LISTO ILUMINACION
@@ -543,6 +558,10 @@ $(document).on('click','#send',function(){
 
 $(document).on('click','#clear',function(){
   $('.console').html('')
+})
+
+$(document).on('click','#doorIcon',function(){
+  controller.openDoor()
 })
 
 $(document).on('submit','#logform',function(e){
