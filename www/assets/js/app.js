@@ -69,19 +69,7 @@ app.Render.Con = function(){
 }
 
 app.Render.Access = function(){
-<<<<<<< HEAD
     // controller.readUsers()
-    $('#navbar').removeClass('hidden')
-    $('#footer').removeClass('hidden')
-    
-    var html="";
-        html += "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; max-height:100%'>";
-        html += "    <div id='lock' style='max-height:100%'>";
-        html += "        <i class=\"fa fa-lock fa-3x\"><\/i>";
-        html += "    <\/div>";
-        html += "<\/div>";
-    app.Sammy.swap(html)
-=======
   $('#navbar').removeClass('hidden')
   $('#footer').removeClass('hidden')
   
@@ -92,7 +80,6 @@ app.Render.Access = function(){
       html += "    <\/div>";
       html += "<\/div>";
   app.Sammy.swap(html)
->>>>>>> origin/master
 }
 
 app.Render.Illumination = function(){
@@ -339,7 +326,7 @@ var decode = {
 
             if (startArray == '235e' && endArray == '3c3f') {
                 decode.slicer(global.completeResp)
-                alert(global.completeResp)
+                // alert(global.completeResp)
                 global.responseArray.length = 0
                 global.completeResp = ''
             }
@@ -384,16 +371,9 @@ var decode = {
               var oltRead = decode.ACK.substr(14, 2)
               var odtRead = decode.ACK.substr(16, 2)
               var odtlRead = decode.ACK.substr(30, 2)
-<<<<<<< HEAD
-              alert(odtlRead)
-              document.getElementById("olt").value = oltRead
-              document.getElementById("odt").value = odtRead
-              document.getElementById("odtl").value = odtlRead
-=======
               $('#olt').val(oltRead)
               $('#odt').val(odtRead)
               $('#odtl').val(odtlRead)
->>>>>>> origin/master
           break; 
           case '0500': break; // Agregar un usuario
           case '0600': break; // Eliminar un usuario 
@@ -421,6 +401,13 @@ var decode = {
                   default: alert('La respuesta no puede ser interpretada SP'); break;
               }
           break; 
+          case '1100':
+              if(decode.ACK === '01'){
+                  alert('Cerradura abierta')
+              }else{
+                  alert('No se pudo ejecutar el comando')
+              }
+          break;
           default: alert('La respuesta no puede ser interpretada'); break;
       }
     }
@@ -435,11 +422,7 @@ var controller = {
         connection.Write(cmdChangeDate)
     },
 
-<<<<<<< HEAD
-    changeSettings: function(olt, odt, odtl){ //LISTO
-=======
     changeSettings: function(olt, odt, odtl){
->>>>>>> origin/master
         var cmdconfigHex = '235e'+'0400'+'607C75C6949360' + olt + odt + '010500020301' + odtl +'01020000'+'00143c3f' 
                          /* 235e   0400   607C75C6949360     0a   0c      010500020301    14     01020000   00143c3f*/
         // alert(cmdconfigHex)
@@ -471,7 +454,8 @@ var controller = {
     },
 
     openDoor: function(){
-
+        var cmdOpenDoor = convert.hex2ascii('235e110000003c3f')
+        connection.Write(cmdOpenDoor)
     },
 
     toggleSP: function(paramsSP){ //LISTO ILUMINACION
@@ -553,6 +537,10 @@ $(document).on('click','#send',function(){
 
 $(document).on('click','#clear',function(){
   $('.console').html('')
+})
+
+$(document).on('click','#doorIcon',function(){
+  controller.openDoor()
 })
 
 $(document).on('submit','#logform',function(e){
