@@ -69,16 +69,17 @@ app.Render.Con = function(){
 }
 
 app.Render.Access = function(){
-  $('#navbar').removeClass('hidden')
-  $('#footer').removeClass('hidden')
-  
-  var html="";
-      html += "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; max-height:100%'>";
-      html += "    <div id='lock' style='max-height:100%'>";
-      html += "        <i class=\"fa fa-lock fa-3x\"><\/i>";
-      html += "    <\/div>";
-      html += "<\/div>";
-  app.Sammy.swap(html)
+    // controller.readUsers()
+    $('#navbar').removeClass('hidden')
+    $('#footer').removeClass('hidden')
+    
+    var html="";
+        html += "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; max-height:100%'>";
+        html += "    <div id='lock' style='max-height:100%'>";
+        html += "        <i class=\"fa fa-lock fa-3x\"><\/i>";
+        html += "    <\/div>";
+        html += "<\/div>";
+    app.Sammy.swap(html)
 }
 
 app.Render.Illumination = function(){
@@ -166,7 +167,8 @@ var global = {
     timeRead: '',
     oltRead: '',
     odtRead: '',
-    odtlRead: ''
+    odtlRead: '',
+    noError: true
 }
 
 var connection = {
@@ -322,6 +324,7 @@ var decode = {
 
             if (startArray == '235e' && endArray == '3c3f') {
                 decode.slicer(global.completeResp)
+                alert(global.completeResp)
                 global.responseArray.length = 0
                 global.completeResp = ''
             }
@@ -342,7 +345,6 @@ var decode = {
 
               global.timeRead = '20'+ yearRead +'-'+ MonthRead +'-'+ dayMonthRead +'T'+ hourRead +':'+ minRead +':'+ secRead
               document.getElementById("datetime").value = global.timeRead
-              ACKstate = ''
           break; 
           case '0100': // modificar fecha
               if (decode.ACK == '01') {
@@ -362,9 +364,9 @@ var decode = {
               alert(odtRead)
               var odtlRead = decode.ACK.substr(30, 2)
               alert(odtlRead)
-              document.getElementById("olt").text = oltRead
-              document.getElementById("odt").text = odtRead
-              document.getElementById("odtl").text = odtlRead
+              document.getElementById("olt").value = oltRead
+              document.getElementById("odt").value = odtRead
+              document.getElementById("odtl").value = odtlRead
           break; 
           case '0500': break; // Agregar un usuario
           case '0600': break; // Eliminar un usuario 
@@ -374,6 +376,8 @@ var decode = {
               switch (decode.ACK){
                   case '00':
                       alert('Error al intentar utilizar SP');
+                      global.noError = false
+                      alert(global.noError)
                       $('#ckbx_ilum').bootstrapToggle('off')
                   break;
                   case '01':
@@ -398,13 +402,13 @@ var decode = {
 
 var controller = {
 
-    changeDate: function(paramsDT){
+    changeDate: function(paramsDT){ //LISTO
         var cmdChangeDate = convert.hex2ascii('235e'+'0100' + paramsDT + '00073c3f')
         // alert(cmdChangeDate)
         connection.Write(cmdChangeDate)
     },
 
-    changeSettings: function(olt, odt, odtl){                                                     
+    changeSettings: function(olt, odt, odtl){ //LISTO
         var cmdconfigHex = '235e'+'0400'+'607C75C6949360' + olt + odt + '010500020301' + odtl +'01020000'+'00143c3f' 
                          /* 235e   0400   607C75C6949360     0a   0c      010500020301    14     01020000   00143c3f*/
         // alert(cmdconfigHex)
@@ -413,7 +417,7 @@ var controller = {
         connection.Write(paramsConfigASCII)
     },
 
-    readSettings: function(){
+    readSettings: function(){ //LISTO
         var cmdRedConfig = convert.hex2ascii("235e0a0000003c3f")
         connection.Write(cmdRedConfig)
     },
@@ -431,7 +435,8 @@ var controller = {
     },
 
     readUsers: function(){
-
+        var cmdReadUser = convert.hex2ascii('235e0c0000003c3f')
+        connection.Write(cmdReadUser)
     },
 
     readLog: function(){
@@ -442,7 +447,7 @@ var controller = {
 
     },
 
-    toggleSP: function(paramsSP){
+    toggleSP: function(paramsSP){ //LISTO ILUMINACION
         switch(paramsSP){
             case '00':// encender SP2 ILUMINACION
                 var cmdOnSP2 = convert.hex2ascii("235e09000000013c3f")
@@ -531,14 +536,16 @@ $(document).on('submit','#logform',function(e){
 
 
 $(document).on('change','#ckbx_ilum', function(){
-    if ( this.checked /*$(this).prop('checked')==true*/) {
-        ilum = 'true'
-        global.flagOnOfSP = 'SP200'
-        controller.toggleSP('00') //encender sp2 ILUMINACION
-    }else{
-        global.flagOnOfSP = 'SP201'
-        controller.toggleSP('01') //apagar sp2 ILUMINACION
-    }
+    if (global.noError) {
+        if ( this.checked /*$(this).prop('checked')==true*/) {
+            ilum = 'true'
+            global.flagOnOfSP = 'SP200'
+            controller.toggleSP('00') //encender sp2 ILUMINACION
+        }else{
+            global.flagOnOfSP = 'SP201'
+            controller.toggleSP('01') //apagar sp2 ILUMINACION
+        }
+    }else{global.noError=true; alert(global.noError)}
 })
 
 // $(document).on('change','#chcbox',function(){ //ILUMINACION.HTML
