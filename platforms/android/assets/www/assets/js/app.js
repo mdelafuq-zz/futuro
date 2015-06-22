@@ -75,7 +75,7 @@ app.Render.Access = function(){
   var html="";
       html += "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; max-height:100%'>";
       html += "    <div id='lock' style='max-height:100%'>";
-      html += "        <i class=\"fa fa-lock fa-3x\"><\/i>";
+      html += "        <i id='doorIcon' class='fa fa-3x " + ( global.doorStatus ? 'fa-unlock-alt' : 'fa-lock' ) + "'><\/i>";
       html += "    <\/div>";
       html += "<\/div>";
   app.Sammy.swap(html)
@@ -153,13 +153,15 @@ app.Render.Config = function(){
   html += "         <\/div>";
   html += "     <\/div>";
   html += " <\/div>";
-    app.Sammy.swap(html)
-    controller.readSettings()
+    app.Sammy.swap(html, function(){
+      controller.readSettings()
+    })
 }
 
 var socket;
 
 var global = {
+    doorStatus: false,
     completeResp:'',
     responseArray:[],
     flagOnOfSP: '',
@@ -340,6 +342,15 @@ var decode = {
               var MonthRead = ACKstate.substr(20, 2)
               var yearRead = ACKstate.substr(22, 2)
 
+              var doorRead = parseInt( ACKstate.substr(4, 2), 16 )
+              if (doorRead >= 148 && doorRead <= 198){
+                global.doorStatus = true
+                $('#doorIcon').removeClass('fa-lock').addClass('fa-unlock-alt')
+              }else{
+                global.doorStatus = false
+                $('#doorIcon').removeClass('fa-unlock-alt').addClass('fa-lock')
+              }
+
               global.timeRead = '20'+ yearRead +'-'+ MonthRead +'-'+ dayMonthRead +'T'+ hourRead +':'+ minRead +':'+ secRead
               document.getElementById("datetime").value = global.timeRead
               ACKstate = ''
@@ -355,16 +366,12 @@ var decode = {
               }else{alert('Error al agregar configuracion');}
           break; 
           case '0a00': // Leer configuracion
-              alert(decode.ACK)
               var oltRead = decode.ACK.substr(14, 2)
-              alert(oltRead)
               var odtRead = decode.ACK.substr(16, 2)
-              alert(odtRead)
               var odtlRead = decode.ACK.substr(30, 2)
-              alert(odtlRead)
-              document.getElementById("olt").text = oltRead
-              document.getElementById("odt").text = odtRead
-              document.getElementById("odtl").text = odtlRead
+              $('#olt').val(oltRead)
+              $('#odt').val(odtRead)
+              $('#odtl').val(odtlRead)
           break; 
           case '0500': break; // Agregar un usuario
           case '0600': break; // Eliminar un usuario 
@@ -404,7 +411,7 @@ var controller = {
         connection.Write(cmdChangeDate)
     },
 
-    changeSettings: function(olt, odt, odtl){                                                     
+    changeSettings: function(olt, odt, odtl){
         var cmdconfigHex = '235e'+'0400'+'607C75C6949360' + olt + odt + '010500020301' + odtl +'01020000'+'00143c3f' 
                          /* 235e   0400   607C75C6949360     0a   0c      010500020301    14     01020000   00143c3f*/
         // alert(cmdconfigHex)
@@ -423,10 +430,6 @@ var controller = {
     },
 
     removeUser: function(){
-
-    },
-
-    downloadUser: function(){
 
     },
 
