@@ -25,16 +25,16 @@
         <div id='app-container'>
             <div id='acceso' class="row" style='margin:0px; height:inherit;'>
                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center" style='height:inherit'>
-                    <div id='lock' class='table-div'>
+                    <div id='lock' class='table-div' style='margin:0 auto'>
                         <span class='span-vcenter'>
                             <i class="fa fa-lock fa-3x"></i>
                         </span>
                     </div>
                 </div>
                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center" style='height:inherit'>
-                    <div id='lock' class='table-div'>
+                    <div id='door' class='table-div' style='margin:0 auto'>
                         <span class='span-vcenter'>
-                            <i class="fa fa-lock fa-3x"></i>
+                            <img id='door-image' src='assets/img/door-closed-512.png'></i>
                         </span>
                     </div>
                 </div>
@@ -83,6 +83,27 @@
             // $(function () {
             //     app.Start()
             // })
+
+            $(document).ready(function (){
+
+            })
+
+            $(document).on('click', '#door-image', function (e){
+                toggleImg($(this), 'door')               
+            })
+
+            function toggleImg (selector, elem){
+                var src = selector.attr('src') 
+                switch(elem){
+                    case 'door':
+                        if ( src.search('closed') >= 0 ){
+                            selector.attr('src', 'assets/img/door-open-512.png')
+                        }else{
+                            selector.attr('src', 'assets/img/door-closed-512.png')
+                        }
+                    break;
+                }
+            }
         </script>
     </body>
 </html>
