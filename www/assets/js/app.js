@@ -13,6 +13,7 @@ app = {
       this.get('#/?', function (context) { app.Show404() })
 
       this.get('#/connection/?', function (context) { app.Render.Con() })
+      this.get('#/loginId/?', function (context) { app.Render.Login() })
       this.get('#/acceso/?', function (context) { app.Render.Access() })
       this.get('#/iluminacion/?', function (context) { app.Render.Illumination() })
       this.get('#/climatizacion/?', function (context) { app.Render.Climate() })
@@ -49,10 +50,10 @@ app = {
 
 app.Render.Con = function(){
   var html="";
-  html += "<div id=\"login\" class=\"col-xs-12 content\" align='center'>";
+  html += "<div id=\"connect\" class=\"col-xs-12 content\" align='center'>";
   html += "    <div class=\"col-md-4\">";
   html += "        <section class=\"login-form\">";
-  html += "            <form id='logform' method=\"post\" action=\"#\" role=\"login\">";
+  html += "            <form id='connectForm' method=\"post\" action=\"#\" role=\"login\">";
   html += "                <img src='assets/img/futuro.png' class=\"img-responsive\" alt=\"\" \/><br>";
   html += "                <input id=\"txtIP\" placeholder=\"IP Address\" required class=\"form-control input-lg\" value=\"192.168.0.69\" \/><br>";
   html += "                <input class=\"form-control input-lg\" id=\"port\" placeholder=\"Port\" required=\"\" value=\"10001\" \/><br>";
@@ -68,21 +69,28 @@ app.Render.Con = function(){
   app.Sammy.swap(html)
 }
 
+app.Render.Login = function(){
+  controller.readUsers()
+  var html="";
+  html += "<div id=\"login\" class=\"col-xs-12 content\" align='center'>";
+  html += "    <div class=\"col-md-4\">";
+  html += "        <section class=\"login-form\">";
+  html += "            <form id='logForm' method=\"post\" action=\"#\" role=\"login\">";
+  html += "                <img src='assets/img/futuro.png' class=\"img-responsive\" alt=\"\" \/><br>";
+  html += "                <input id=\"txtID\" placeholder=\"Ingrese su ID (20 DIGITOS)\" required class=\"form-control input-lg\" value=\"\" \/><br>";
+  html += "                <div class=\"pwstrength_viewport_progress\"><\/div><br>";
+  html += "                <button type=\"submit\" class=\"btn btn-lg btn-primary btn-block\">Sign in<\/button><br>";
+  html += "                <div>";
+  html += "                    <a href=\"http:\/\/www.futurointeligente.com\/\">Futuro Inteligente!<\/a>";
+  html += "                <\/div>";
+  html += "            <\/form>";
+  html += "        <\/section>  ";
+  html += "    <\/div>";
+  html += "<\/div>";
+  app.Sammy.swap(html)
+}
+
 app.Render.Access = function(){
-<<<<<<< HEAD
-    $('#navbar').removeClass('hidden')
-    $('#footer').removeClass('hidden')
-    
-    var html="";
-        html += "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; max-height:100%'>";
-        html += "    <div id='lock' style='max-height:100%'>";
-        html += "        <i class=\"fa fa-lock fa-3x\"><\/i>";
-        html += "    <\/div>";
-        html += "<\/div>";
-    app.Sammy.swap(html)
-=======
-    // controller.readUsers()
->>>>>>> origin/master
   $('#navbar').removeClass('hidden')
   $('#footer').removeClass('hidden')
   
@@ -114,7 +122,7 @@ app.Render.Illumination = function(){
       html += "        <input id=\"ckbx_ilum\" type=\"checkbox\" checked data-toggle=\"toggle\">";
       html += "    <\/div>";
       html += "<\/div>";
-  app.Sammy.swap(html,function(){
+  app.Sammy.swap(html, function(){
       $('#ckbx_ilum').bootstrapToggle();
       $('#iluminacion').fadeIn()
   })
@@ -122,10 +130,17 @@ app.Render.Illumination = function(){
 
 app.Render.Climate = function(){
   var html="";
-      html += "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; min-height:100%'>";
-      html += "    3   ";
+      html += "<div id=\"climatizacion\" class=\"col-xs-12 content hidden\" align='center'>";
+      html +=     "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; min-height:100%' \" align='center'>";
+      html +=     "    <div>";
+      html +=     "        <input id=\"check_climate\" type=\"checkbox\" checked data-toggle=\"toggle\">";
+      html +=     "    <\/div>";
+      html +=     "<\/div>";
       html += "<\/div>";
-  app.Sammy.swap(html)
+  app.Sammy.swap(html, function(){
+      $('#check_climate').bootstrapToggle();
+      $('#climatizacion').fadeIn()
+  })
 }
 
 app.Render.Config = function(){
@@ -178,7 +193,7 @@ var global = {
     doorStatus: false,
     completeResp:'',
     responseArray:[],
-    flagOnOfSP: '',
+    flagOnOffSP: '',
     timeRead: '',
     oltRead: '',
     odtRead: '',
@@ -223,12 +238,12 @@ var connection = {
         var data = new Uint8Array(dataString.length);
 
         for (var i = 0; i < data.length; i++) {
-          data[i] = dataString.charCodeAt(i);
+            data[i] = dataString.charCodeAt(i);
         }
 
         var resultuint = ''
         for (var item in data){
-          resultuint += data[item];
+            resultuint += data[item];
         }
 
         socket.write(data);
@@ -348,7 +363,7 @@ var decode = {
 
     CommandToRead: function(){
         switch(decode.idCmd){
-          case '0001': // estado actual
+          case '0001': // estado actual LISTO
               var ACKstate = decode.ACK
               // alert(ACKstate)
               var secRead = ACKstate.substr(10, 2)
@@ -368,30 +383,23 @@ var decode = {
               }
 
               global.timeRead = '20'+ yearRead +'-'+ MonthRead +'-'+ dayMonthRead +'T'+ hourRead +':'+ minRead +':'+ secRead
-              document.getElementById("datetime").value = global.timeRead
+              $('#datetime').val(global.timeRead)
           break; 
-          case '0100': // modificar fecha
+          case '0100': // modificar fecha LISTO
               if (decode.ACK == '01') {
                   alert('Hora y fecha modificada con éxito')
               }else{alert('Error al modificar hora y fecha');}
           break; 
-          case '0400': // Modificar configuracion
+          case '0400': // Modificar configuracion LISTO
               if (decode.ACK == '01') {
                   alert('Nueva configuracion agregada con éxito')
               }else{alert('Error al agregar configuracion');}
           break; 
-          case '0a00': // Leer configuracion
+          case '0a00': // Leer configuracion LISTO
               var oltRead = decode.ACK.substr(14, 2)
               var odtRead = decode.ACK.substr(16, 2)
               var odtlRead = decode.ACK.substr(30, 2)
-<<<<<<< HEAD
 
-              document.getElementById("olt").value = oltRead
-              document.getElementById("odt").value = odtRead
-              document.getElementById("odtl").value = odtlRead
-
-=======
->>>>>>> origin/master
               $('#olt').val(oltRead)
               $('#odt').val(odtRead)
               $('#odtl').val(odtlRead)
@@ -399,30 +407,43 @@ var decode = {
           case '0500': break; // Agregar un usuario
           case '0600': break; // Eliminar un usuario 
           case '0b00': break; // Descargar bitacora
-          case '0c00': break; // Descargar bloque de usuario (opcional si Admin)
-          case '0900': // Encender/apagar SP (SP1 luz, SP2 aire, SP3 opcional)
+          case '0c00': alert('bloque de usuario descargado'); break; // Descargar bloque de usuario (opcional si Admin)
+          case '0900': // Encender/apagar SP (SP1 luz, SP2 aire, SP3 opcional) LISTO
               switch (decode.ACK){
                   case '00':
-                      alert('Error al intentar utilizar SP');
-                      global.noError = false
-                      alert(global.noError)
-                      $('#ckbx_ilum').bootstrapToggle('off')
+                      if (global.flagOnOffSP == 'SP200' || global.flagOnOffSP == 'SP201') {
+                          alert('Error al intentar prender foco')
+                          global.noError = false
+                          $('#ckbx_ilum').bootstrapToggle('off')
+                          global.flagOnOffSP = ''
+                      }else if (global.flagOnOffSP == 'SP302' || global.flagOnOffSP == 'SP303'){
+                          alert('Error al intentar prender aire')
+                          global.noError = false
+                          $('#check_climate').bootstrapToggle('off')
+                          global.flagOnOffSP = ''
+                      }
                   break;
                   case '01':
-                      if (global.flagOnOfSP == 'SP200') {
-                          alert('Foco encendido');
+                      if (global.flagOnOffSP == 'SP200') {
+                          alert('Foco encendido')
                           // document.getElementById('focus').style.color="#E5CA19";
-                          global.flagOnOfSP = ''
-                      }else if (global.flagOnOfSP == 'SP201'){
-                          alert('Foco apagado');
+                          global.flagOnOffSP = ''
+                      }else if (global.flagOnOffSP == 'SP201'){
+                          alert('Foco apagado')
                           // document.getElementById('focus').style.color="#333";
-                          global.flagOnOfSP = ''
+                          global.flagOnOffSP = ''
+                      }else if (global.flagOnOffSP == 'SP302'){
+                          alert('Aire encendido')
+                          global.flagOnOffSP = ''
+                      }else if (global.flagOnOffSP == 'SP303'){
+                          alert('Aire apagado')
+                          global.flagOnOffSP = ''
                       }
                   break;
                   default: alert('La respuesta no puede ser interpretada SP'); break;
               }
           break; 
-          case '1100':
+          case '1100': // CERRADURA LISTO
               if(decode.ACK === '01'){
                   alert('Cerradura abierta')
               }else{
@@ -437,13 +458,13 @@ var decode = {
 
 var controller = {
 
-    changeDate: function(paramsDT){ //LISTO
+    changeDate: function(paramsDT){ // CAMBIAR FECHA/HORA LISTO
         var cmdChangeDate = convert.hex2ascii('235e'+'0100' + paramsDT + '00073c3f')
         // alert(cmdChangeDate)
         connection.Write(cmdChangeDate)
     },
 
-    changeSettings: function(olt, odt, odtl){
+    changeSettings: function(olt, odt, odtl){ // CAMBIAR CONFIGURACION LISTO
         var cmdconfigHex = '235e'+'0400'+'607C75C6949360' + olt + odt + '010500020301' + odtl +'01020000'+'00143c3f' 
                          /* 235e   0400   607C75C6949360     0a   0c      010500020301    14     01020000   00143c3f*/
         // alert(cmdconfigHex)
@@ -452,9 +473,41 @@ var controller = {
         connection.Write(paramsConfigASCII)
     },
 
-    readSettings: function(){ //LISTO
+    readSettings: function(){ // LEER CONFIG LISTO
         var cmdRedConfig = convert.hex2ascii("235e0a0000003c3f")
         connection.Write(cmdRedConfig)
+    },
+
+    readUsers: function(){ // DESCARGAR USUARIO LISTO
+        var cmdReadUser = convert.hex2ascii('235e0c0000003c3f')
+        connection.Write(cmdReadUser)
+    },
+
+    openDoor: function(){ //ABRIR PUERTA LISTO
+        var cmdOpenDoor = convert.hex2ascii('235e110000003c3f')
+        connection.Write(cmdOpenDoor)
+    },
+
+    toggleSP: function(paramsSP){ // ILUMINACION LISTO
+        switch(paramsSP){
+            case '00':// encender SP2 ILUMINACION
+                var cmdOnSP2 = convert.hex2ascii("235e09000000013c3f")
+                connection.Write(cmdOnSP2)
+            break; 
+            case '01':// apagar SP2 ILUMINACION
+                var cmdOfSP2 = convert.hex2ascii("235e09000100013c3f")
+                connection.Write(cmdOfSP2)
+            break; 
+            case '02':// encender SP3
+                var cmdOfSP3 = convert.hex2ascii("235e09000200013c3f")
+                connection.Write(cmdOfSP3)
+            break; 
+            case '03':// apagar SP3
+                var cmdOfSP3 = convert.hex2ascii("235e09000300013c3f")
+                connection.Write(cmdOfSP3)
+            break; 
+            default: alert('La tarea no puede ser interpretada'); break;
+        }
     },
 
     addUser: function(){
@@ -465,43 +518,10 @@ var controller = {
 
     },
 
-    readUsers: function(){
-        var cmdReadUser = convert.hex2ascii('235e0c0000003c3f')
-        connection.Write(cmdReadUser)
-    },
-
     readLog: function(){
 
-    },
-
-    openDoor: function(){
-        var cmdOpenDoor = convert.hex2ascii('235e110000003c3f')
-        connection.Write(cmdOpenDoor)
-    },
-
-    toggleSP: function(paramsSP){ //LISTO ILUMINACION
-        switch(paramsSP){
-            case '00':// encender SP2 ILUMINACION
-                var cmdOnSP2 = convert.hex2ascii("235e09000000013c3f")
-                // alert(cmdOnSP2)
-                connection.Write(cmdOnSP2)
-            break; 
-            case '01':// apagar SP2 ILUMINACION
-                var cmdOfSP2 = convert.hex2ascii("235e09000100013c3f")
-                // alert(cmdOfSP2)
-                connection.Write(cmdOfSP2)
-            break; 
-            case '02':// encender SP3
-
-            break; 
-            case '03':// apagar SP3
-
-            break; 
-            default: alert('La tarea no puede ser interpretada'); break;
-        }
     }
 }
-
 
 
 document.addEventListener("deviceready", onDeviceReady, false);
@@ -518,6 +538,8 @@ function onDeviceReady() {
     };
 }
 
+//LISTENNER
+
 /*funcion solo para el menu*/
 $('.footer').on('click','.footer-item',function(){
 	$('.footer-active').removeClass('footer-active')
@@ -526,7 +548,7 @@ $('.footer').on('click','.footer-item',function(){
 
 $(document).on('click','#connect',function(e){
 	e.preventDefault()
-    connection.Connect()
+  connection.Connect()
 })
 
 $(document).on('click','#disconnect',function(e){
@@ -564,23 +586,34 @@ $(document).on('click','#doorIcon',function(){
   controller.openDoor()
 })
 
-$(document).on('submit','#logform',function(e){
+$(document).on('submit','#connectForm',function(e){
   e.preventDefault()
   // window.location = 'acceso.html'
   connection.Connect()
 })
 
-
 $(document).on('change','#ckbx_ilum', function(){
     if (global.noError) {
         if ( this.checked /*$(this).prop('checked')==true*/) {
-            global.flagOnOfSP = 'SP200'
+            global.flagOnOffSP = 'SP200'
             controller.toggleSP('00') //encender sp2 ILUMINACION
         }else{
-            global.flagOnOfSP = 'SP201'
+            global.flagOnOffSP = 'SP201'
             controller.toggleSP('01') //apagar sp2 ILUMINACION
         }
     }else{global.noError=true; alert(global.noError)}
+})
+
+$(document).on('change','#check_climate', function(){
+    if (global.noError) {
+        if ( this.checked /*$(this).prop('checked')==true*/) {
+            global.flagOnOffSP = 'SP302'
+            controller.toggleSP('02') //encender sp3 CLIMATIZACION
+        }else{
+            global.flagOnOffSP = 'SP303'
+            controller.toggleSP('03') //apagar sp3 CLIMATIZACION
+        }
+    }else{global.noError=true;}
 })
 
 // $(document).on('change','#chcbox',function(){ //ILUMINACION.HTML
