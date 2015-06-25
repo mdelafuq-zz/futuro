@@ -94,12 +94,31 @@ app.Render.Access = function(){
   $('#navbar').removeClass('hidden')
   $('#footer').removeClass('hidden')
   
-  var html="";
-      html += "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; max-height:100%'>";
-      html += "    <div id='lock' style='max-height:100%'>";
-      html += "        <i id='doorIcon' class='fa fa-3x " + ( global.doorStatus ? 'fa-unlock-alt' : 'fa-lock' ) + "'><\/i>";
+  // var html="";
+  //     html += "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; max-height:100%'>";
+  //     html += "    <div id='lock' style='max-height:100%'>";
+  //     html += "        <i id='doorIcon' class='fa fa-3x " + ( global.doorStatus ? 'fa-unlock-alt' : 'fa-lock' ) + "'><\/i>";
+  //     html += "    <\/div>";
+  //     html += "<\/div>";
+
+      var html="";
+      html += "<div id='acceso' class=\"row\" style='margin:0px; height:inherit;'>";
+      html += "    <div class=\"col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center\" style='height:inherit'>";
+      html += "        <div id='lock' class='table-div' style='margin:0 auto'>";
+      html += "            <span class='span-vcenter'>";
+      html += "                <i id='lockIcon' class='fa fa-3x " + ( global.lockStatus ? 'fa-unlock-alt' : 'fa-lock' ) + "'><\/i>";
+      html += "            <\/span>";
+      html += "        <\/div>";
+      html += "    <\/div>";
+      html += "    <div class=\"col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center\" style='height:inherit'>";
+      html += "        <div id='door' class='table-div' style='margin:0 auto'>";
+      html += "            <span class='span-vcenter'>";
+      html += "                <img id='door-image' src='" + ( global.doorStatus ? 'assets\/img\/door-open-512.png' : 'assets\/img\/door-closed-512.png' ) + "'><\/i>";
+      html += "            <\/span>";
+      html += "        <\/div>";
       html += "    <\/div>";
       html += "<\/div>";
+
   app.Sammy.swap(html)
 }
 
@@ -116,14 +135,24 @@ app.Render.Illumination = function(){
   var html="";
       html += "<div id=\"iluminacion\" class=\"col-xs-12 content hidden\" align='center'>";
       html += "    <div class='foco'>";
-      html += "        <i class=\"fa fa-lightbulb-o  fa-5x\" id=\"focus\" style='max-width:100%; max-height:inherit'><\/i>";
+      // html += "     <i class=\"fa fa-lightbulb-o  fa-5x\" id=\"focus\" style='max-width:100%; max-height:inherit'><\/i>";
+      html += "        <img id=\"img-foco\" src='" + ( global.sp2Status ? 'assets\/img\/foco-on-512.png' : 'assets\/img\/foco-off-512.png' ) + "' class=\"img-responsive\"><\/i>";
       html += "    <\/div>";
-      html += "    <div>";
-      html += "        <input id=\"ckbx_ilum\" type=\"checkbox\" checked data-toggle=\"toggle\">";
+      html += "    <div><br>"; 
+      html += "        <input id=\"ckbx_ilum\" type=\"checkbox\" data-toggle=\"toggle\" checked='" + ( global.sp2Status ? 'true' : 'false' ) + "' >";
       html += "    <\/div>";
       html += "<\/div>";
   app.Sammy.swap(html, function(){
-      $('#ckbx_ilum').bootstrapToggle();
+      // if (global.sp2Status) {
+      //   global.noError = false
+        $('#ckbx_ilum').bootstrapToggle()
+      //   $("#img-foco").attr("src","assets/img/foco-on-512.png")
+      // }else{
+      //   global.noError = false
+      //   $('#ckbx_ilum').bootstrapToggle('off')
+      //   $("#img-foco").attr("src","assets/img/foco-off-512.png")
+      // }
+      
       $('#iluminacion').fadeIn()
   })
 }
@@ -190,7 +219,9 @@ app.Render.Config = function(){
 var socket;
 
 var global = {
+    lockStatus: false,
     doorStatus: false,
+    sp2Status: false,
     completeResp:'',
     responseArray:[],
     flagOnOffSP: '',
@@ -373,13 +404,24 @@ var decode = {
               var MonthRead = ACKstate.substr(20, 2)
               var yearRead = ACKstate.substr(22, 2)
 
+              var sp2Status = ACKstate.substr(2, 2)
+              alert(sp2Status)
+              if (sp2Status == '0d' || sp2Status == '05'){
+                  global.sp2Status = true
+              }else{
+                  global.sp2Status = false
+              }
+
               var doorRead = parseInt( ACKstate.substr(4, 2), 16 )
+
               if (doorRead >= 148 && doorRead <= 198){
                 global.doorStatus = true
-                $('#doorIcon').removeClass('fa-lock').addClass('fa-unlock-alt')
+                $("#door-image").attr("src", 'assets/img/door-open-512.png')
               }else{
                 global.doorStatus = false
-                $('#doorIcon').removeClass('fa-unlock-alt').addClass('fa-lock')
+                $("#door-image").attr("src", 'assets/img/door-closed-512.png')
+                global.lockStatus = false
+                $('#lockIcon').removeClass('fa-unlock-alt').addClass('fa-lock')
               }
 
               global.timeRead = '20'+ yearRead +'-'+ MonthRead +'-'+ dayMonthRead +'T'+ hourRead +':'+ minRead +':'+ secRead
@@ -415,29 +457,26 @@ var decode = {
                           alert('Error al intentar prender foco')
                           global.noError = false
                           $('#ckbx_ilum').bootstrapToggle('off')
-                          global.flagOnOffSP = ''
+                          global.sp2Status = false
                       }else if (global.flagOnOffSP == 'SP302' || global.flagOnOffSP == 'SP303'){
                           alert('Error al intentar prender aire')
                           global.noError = false
                           $('#check_climate').bootstrapToggle('off')
-                          global.flagOnOffSP = ''
                       }
                   break;
                   case '01':
                       if (global.flagOnOffSP == 'SP200') {
                           alert('Foco encendido')
-                          // document.getElementById('focus').style.color="#E5CA19";
-                          global.flagOnOffSP = ''
+                          $("#img-foco").attr("src","assets/img/foco-on-512.png")
+                          global.sp2Status = true
                       }else if (global.flagOnOffSP == 'SP201'){
                           alert('Foco apagado')
-                          // document.getElementById('focus').style.color="#333";
-                          global.flagOnOffSP = ''
+                          $("#img-foco").attr("src","assets/img/foco-off-512.png")
+                          global.sp2Status = false
                       }else if (global.flagOnOffSP == 'SP302'){
                           alert('Aire encendido')
-                          global.flagOnOffSP = ''
                       }else if (global.flagOnOffSP == 'SP303'){
                           alert('Aire apagado')
-                          global.flagOnOffSP = ''
                       }
                   break;
                   default: alert('La respuesta no puede ser interpretada SP'); break;
@@ -446,8 +485,12 @@ var decode = {
           case '1100': // CERRADURA LISTO
               if(decode.ACK === '01'){
                   alert('Cerradura abierta')
+                  global.lockStatus = true
+                  $('#lockIcon').removeClass('fa-lock').addClass('fa-unlock-alt')
               }else{
                   alert('No se pudo ejecutar el comando')
+                  global.lockStatus = false
+                  $('#lockIcon').removeClass('fa-unlock-alt').addClass('fa-lock')
               }
           break;
           default: alert('La respuesta no puede ser interpretada'); break;
@@ -582,7 +625,7 @@ $(document).on('click','#clear',function(){
   $('.console').html('')
 })
 
-$(document).on('click','#doorIcon',function(){
+$(document).on('click','#lockIcon',function(){
   controller.openDoor()
 })
 
@@ -601,7 +644,7 @@ $(document).on('change','#ckbx_ilum', function(){
             global.flagOnOffSP = 'SP201'
             controller.toggleSP('01') //apagar sp2 ILUMINACION
         }
-    }else{global.noError=true; alert(global.noError)}
+    }else{global.noError=true;}
 })
 
 $(document).on('change','#check_climate', function(){
