@@ -50,13 +50,13 @@ app = {
 
 app.Render.Con = function(){
   var html="";
-  html += "<div id=\"connect\" class=\"col-xs-12 content\" align='center'>";
+  html += "<div id=\"\" class=\"col-xs-12 content\" align='center'>";
   html += "    <div class=\"col-md-4\">";
   html += "        <section class=\"login-form\">";
   html += "            <form id='connectForm' method=\"post\" action=\"#\" role=\"login\">";
   html += "                <img src='assets/img/futuro.png' class=\"img-responsive\" alt=\"\" \/><br>";
-  html += "                <input id=\"txtIP\" placeholder=\"IP Address\" required class=\"form-control input-lg\" value=\"192.168.0.69\" \/><br>";
-  html += "                <input class=\"form-control input-lg\" id=\"port\" placeholder=\"Port\" required=\"\" value=\"10001\" \/><br>";
+  html += "                <input type='text' id=\"txtIP\" placeholder=\"IP Address\" required class=\"form-control input-lg\" value=\"\" \/><br>";
+  html += "                <input type='number' id=\"port\" class=\"form-control input-lg\" placeholder=\"Port\" required=\"\" value=\"\" \/><br>";
   html += "                <div class=\"pwstrength_viewport_progress\"><\/div><br>";
   html += "                <button type=\"submit\" class=\"btn btn-lg btn-primary btn-block\">Sign in<\/button><br>";
   html += "                <div>";
@@ -139,19 +139,17 @@ app.Render.Illumination = function(){
       html += "        <img id=\"img-foco\" src='" + ( global.sp2Status ? 'assets\/img\/foco-on-512.png' : 'assets\/img\/foco-off-512.png' ) + "' class=\"img-responsive\"><\/i>";
       html += "    <\/div>";
       html += "    <div><br>"; 
-      html += "        <input id=\"ckbx_ilum\" type=\"checkbox\" data-toggle=\"toggle\" checked='" + ( global.sp2Status ? 'true' : 'false' ) + "' >";
+      html += "        <input id=\"ckbx_ilum\" type=\"checkbox\" data-toggle=\"toggle\">";
       html += "    <\/div>";
       html += "<\/div>";
   app.Sammy.swap(html, function(){
-      // if (global.sp2Status) {
-      //   global.noError = false
-        $('#ckbx_ilum').bootstrapToggle()
-      //   $("#img-foco").attr("src","assets/img/foco-on-512.png")
-      // }else{
-      //   global.noError = false
-      //   $('#ckbx_ilum').bootstrapToggle('off')
-      //   $("#img-foco").attr("src","assets/img/foco-off-512.png")
-      // }
+      if (global.sp2Status) {
+        global.noError = false
+        $('#ckbx_ilum').bootstrapToggle('on')
+      }else{
+        global.noError = false
+        $('#ckbx_ilum').bootstrapToggle('off')
+      }
       
       $('#iluminacion').fadeIn()
   })
@@ -234,8 +232,8 @@ var global = {
 
 var connection = {
 
-    host: '192.168.0.69',
-    port: 10001,
+    host: '',
+    port: 0,
     Connect: function(){
         // connection.host = document.getElementById("txtIP").value;
         // connection.port = document.getElementById("Port").value;
@@ -588,7 +586,7 @@ $('.footer').on('click','.footer-item',function(){
 	$(this).addClass('footer-active')
 })
 
-$(document).on('click','#connect',function(e){
+$(document).on('click','#connect', function(e){
 	e.preventDefault()
   connection.Connect()
 })
@@ -628,8 +626,12 @@ $(document).on('click','#lockIcon',function(){
   controller.openDoor()
 })
 
-$(document).on('submit','#connectForm',function(e){
+$(document).on('submit','#connectForm', function (e){
   e.preventDefault()
+  var host = $('#txtIP').val()
+  var port = parseInt($('#port').val())
+  connection.host = host
+  connection.port = port
   // window.location = 'acceso.html'
   connection.Connect()
 })

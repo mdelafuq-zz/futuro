@@ -8,13 +8,13 @@
 
         <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" href="assets/css/bootstrap.css">
-        <link rel="stylesheet" href="assets/css/bootstrap2-toggle.min.css">      
+        <link rel="stylesheet" href="assets/css/bootstrap-switch.css">      
         <link rel="stylesheet" href="assets/css/app.css">
         <link rel="stylesheet" href="assets/css/responsive-icon.css">
     </head>
 
     <body>
-        <nav id='navbar' class="navbar navbar-fixed-top navbar-default menu hidden">
+        <nav class="navbar navbar-fixed-top navbar-default menu">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a class="navbar-brand" style="color:white;" href="#">Futuro Inteligente</a>
@@ -23,10 +23,40 @@
         </nav>
         
         <div id='app-container'>
-            
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Card</th>
+                        <th>Locality</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>12345678901234567890</td>
+                        <td>20</td>
+                        <td><button data-localidad='0016' class='btn btn-default btn-eliminar'>Eliminar</button></td>
+                    </tr>
+                    <tr>
+                        <td>12345678901234567890</td>
+                        <td>21</td>
+                        <td><button data-localidad='0017' class='btn btn-default btn-eliminar'>Eliminar</button></td>
+                    </tr>
+                    <tr>
+                        <td>12345678901234567890</td>
+                        <td>22</td>
+                        <td><button data-localidad='0018' class='btn btn-default btn-eliminar'>Eliminar</button></td>
+                    </tr>
+                    <tr>
+                        <td>12345678901234567890</td>
+                        <td>23</td>
+                        <td><button data-localidad='0019' class='btn btn-default btn-eliminar'>Eliminar</button></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
-        <footer id='footer' class="footer hidden">
+        <footer class="footer">
             <a href="#/acceso" class="a-nostyle">
                 <div class="footer-item footer-active col-xs-3 col-sm-3 col-md-3 col-lg-3">
                     <span class='span-vcenter'>
@@ -61,13 +91,34 @@
         <script src="assets/js/jquery.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
         <script src="assets/js/sammy.js"></script>
-        <script src="assets/js/bootstrap2-toggle.min.js"></script>
+        <script src="assets/js/bootstrap-switch.js"></script>
         <script src="assets/js/app.js"></script>
 
         <script>
-            $(function () {
-                app.Start()
+            // $(function () {
+            //     app.Start()
+            // })
+
+            $(document).ready(function (){
+
             })
+
+            $(document).on('click', '.btn-eliminar', function (e){
+                alert($(this).data('localidad'))              
+            })
+
+            function toggleImg (selector, elem){
+                var src = selector.attr('src') 
+                switch(elem){
+                    case 'door':
+                        if ( src.search('closed') >= 0 ){
+                            selector.attr('src', 'assets/img/door-open-512.png')
+                        }else{
+                            selector.attr('src', 'assets/img/door-closed-512.png')
+                        }
+                    break;
+                }
+            }
         </script>
     </body>
 </html>
