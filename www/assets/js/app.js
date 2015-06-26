@@ -165,7 +165,13 @@ app.Render.Climate = function(){
       html +=     "<\/div>";
       html += "<\/div>";
   app.Sammy.swap(html, function(){
-      $('#check_climate').bootstrapToggle();
+      if (global.sp3Status) {
+        global.noError = false
+        $('#check_climate').bootstrapToggle('on')
+      }else{
+        global.noError = false
+        $('#check_climate').bootstrapToggle('off')
+      }
       $('#climatizacion').fadeIn()
   })
 }
@@ -181,13 +187,13 @@ app.Render.Config = function(){
   html += "             <\/div>";
   html += "             <div class=\"panel-body\">";
   html += "                 <div class=\"form-group\">";
-  html += "                     <input type=\"number\" class=\"form-control\" id=\"olt\" placeholder=\"Opening lock timer (seg)\" value=\"\">";
+  html += "                     <input type=\"number\" class=\"form-control\" id=\"olt\" placeholder=\"Opening lock timer (seg)\" value='" + global.oltRead + "'>";
   html += "                 <\/div>";
   html += "                 <div class=\"form-group\">";
-  html += "                     <input type=\"number\" class=\"form-control\" id=\"odt\" placeholder=\"Opening door timeout (seg)\" value=\"\">";
+  html += "                     <input type=\"number\" class=\"form-control\" id=\"odt\" placeholder=\"Opening door timeout (seg)\" value='" + global.odtRead + "'>";
   html += "                 <\/div>";
   html += "                 <div class=\"form-group\">";
-  html += "                     <input type=\"number\" class=\"form-control\" id=\"odtl\" placeholder=\"Opened door time limit (seg)\" value=\"\">";
+  html += "                     <input type=\"number\" class=\"form-control\" id=\"odtl\" placeholder=\"Opened door time limit (seg)\" value='" + global.odtlRead + "'>";
   html += "                 <\/div>";
   html += "                 <button id=\"btn_config\" type=\"button\" class=\"btn btn-primary btn-lg btn-block\">Cambiar configuración<\/button>";
   html += "             <\/div>";
@@ -200,7 +206,7 @@ app.Render.Config = function(){
   html += "             <\/div>";
   html += "             <div class=\"panel-body\">";
   html += "                 <div align=\"center\">";
-  html += "                     <input type=\"datetime-local\" id=\"datetime\"><br>";
+  html += "                     <input type=\"datetime-local\" id=\"datetime\" value= '" + global.timeRead + "'><br>";
   html += "                 <\/div><br>";
   html += "                 <div align=\"center\">";
   html += "                     <button id=\"btn_hora\" type=\"button\" class=\"btn btn-primary btn-lg btn-block\">Modificar hora<\/button>";
@@ -220,6 +226,7 @@ var global = {
     lockStatus: false,
     doorStatus: false,
     sp2Status: false,
+    sp3Status: false,
     completeResp:'',
     responseArray:[],
     flagOnOffSP: '',
@@ -435,13 +442,13 @@ var decode = {
               }else{alert('Error al agregar configuracion');}
           break; 
           case '0a00': // Leer configuracion LISTO
-              var oltRead = decode.ACK.substr(14, 2)
-              var odtRead = decode.ACK.substr(16, 2)
-              var odtlRead = decode.ACK.substr(30, 2)
+              global.oltRead = decode.ACK.substr(14, 2)
+              global.odtRead = decode.ACK.substr(16, 2)
+              global.odtlRead = decode.ACK.substr(30, 2)
 
-              $('#olt').val(oltRead)
-              $('#odt').val(odtRead)
-              $('#odtl').val(odtlRead)
+              $('#olt').val(global.oltRead)
+              $('#odt').val(global.odtRead)
+              $('#odtl').val(global.odtlRead)
           break; 
           case '0500': break; // Agregar un usuario
           case '0600': break; // Eliminar un usuario 
@@ -472,8 +479,10 @@ var decode = {
                           global.sp2Status = false
                       }else if (global.flagOnOffSP == 'SP302'){
                           alert('Aire encendido')
+                          global.sp3Status = true
                       }else if (global.flagOnOffSP == 'SP303'){
                           alert('Aire apagado')
+                          global.sp3Status = false
                       }
                   break;
                   default: alert('La respuesta no puede ser interpretada SP'); break;
