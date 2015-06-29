@@ -18,6 +18,7 @@ app = {
       this.get('#/iluminacion/?', function (context) { app.Render.Illumination() })
       this.get('#/climatizacion/?', function (context) { app.Render.Climate() })
       this.get('#/config/?', function (context) { app.Render.Config() })
+      this.get('#/users/?', function (context) { app.Render.Users() })
 
       // this.get('#/climatizacion/:id/?', function (context) { app.Resident.RenderRegulation(context.params['id']) })
 
@@ -39,32 +40,36 @@ app = {
 
   Render:{},
   Sammy: null,
-  counter:0
+  counter:0,
 
-  // Globals:{
-  //   Door: false,
-  //   SP1: false,
-  //   SP2: false
-  // }
 }
+
+app.Loading="";
+app.Loading += "<div class=\"container-fluid\" style='height:inherit'>";
+app.Loading += "    <div class=\"col-xs-5 col-sm-5 col-md-5 col-lg-5\" >";
+app.Loading += "    <\/div>";
+app.Loading += "    <div class=\"col-xs-2 col-sm-2 col-md-2 col-lg-2\" style='text-align:center; height:inherit; display:table; margin-top:-52px'>";
+app.Loading += "        <span class='span-vcenter'>";
+app.Loading += "            <img src=\"assets\/img\/loading.gif\" \/>";
+app.Loading += "        <\/span>";
+app.Loading += "    <\/div>";
+app.Loading += "    <div class=\"col-xs-5 col-sm-5 col-md-5 col-lg-5\">";
+app.Loading += "    <\/div>";
+app.Loading += "<\/div>";
 
 app.Render.Con = function(){
   var html="";
-  html += "<div id=\"\" class=\"col-xs-12 content\" align='center'>";
-  html += "    <div class=\"col-md-4\">";
-  html += "        <section class=\"login-form\">";
-  html += "            <form id='connectForm' method=\"post\" action=\"#\" role=\"login\">";
-  html += "                <img src='assets/img/futuro.png' class=\"img-responsive\" alt=\"\" \/><br>";
-  html += "                <input type='text' id=\"txtIP\" placeholder=\"IP Address\" required class=\"form-control input-lg\" value=\"\" \/><br>";
-  html += "                <input type='number' id=\"port\" class=\"form-control input-lg\" placeholder=\"Port\" required=\"\" value=\"\" \/><br>";
-  html += "                <div class=\"pwstrength_viewport_progress\"><\/div><br>";
-  html += "                <button type=\"submit\" class=\"btn btn-lg btn-primary btn-block\">Sign in<\/button><br>";
-  html += "                <div>";
-  html += "                    <a href=\"http:\/\/www.futurointeligente.com\/\">Futuro Inteligente!<\/a>";
-  html += "                <\/div>";
-  html += "            <\/form>";
-  html += "        <\/section>  ";
-  html += "    <\/div>";
+  html += "<div class=\"col-xs-12 col-sm-6 col-sm-offset-3\" align='center'>";
+  html += "   <form id='connectForm' method=\"post\" action=\"#\" role=\"login\">";
+  html += "       <img src='assets/img/futuro.png' class=\"img-responsive\" alt=\"\" \/><br>";
+  html += "       <input type='text' id=\"txtIP\" placeholder=\"IP Address\" required class=\"form-control input-lg\" value=\"192.168.0.60\" \/><br>";
+  html += "       <input type='number' id=\"port\" class=\"form-control input-lg\" placeholder=\"Port\" required=\"\" value=\"10001\" \/><br>";
+  html += "       <div class=\"pwstrength_viewport_progress\"><\/div><br>";
+  html += "       <button type=\"submit\" class=\"btn btn-lg btn-primary btn-block\">Sign in<\/button><br>";
+  html += "       <div>";
+  html += "           <a href=\"http:\/\/www.futurointeligente.com\/\">Futuro Inteligente<\/a>";
+  html += "       <\/div>";
+  html += "   <\/form>";
   html += "<\/div>";
   app.Sammy.swap(html)
 }
@@ -94,17 +99,10 @@ app.Render.Access = function(){
   $('#navbar').removeClass('hidden')
   $('#footer').removeClass('hidden')
   
-  // var html="";
-  //     html += "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; max-height:100%'>";
-  //     html += "    <div id='lock' style='max-height:100%'>";
-  //     html += "        <i id='doorIcon' class='fa fa-3x " + ( global.doorStatus ? 'fa-unlock-alt' : 'fa-lock' ) + "'><\/i>";
-  //     html += "    <\/div>";
-  //     html += "<\/div>";
-
       var html="";
       html += "<div id='acceso' class=\"row\" style='margin:0px; height:inherit;'>";
       html += "    <div class=\"col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center\" style='height:inherit'>";
-      html += "        <div id='lock' class='table-div' style='margin:0 auto'>";
+      html += "        <div id='lock' class='table-div' style='margin:0 auto; color:black'>";
       html += "            <span class='span-vcenter'>";
       html += "                <i id='lockIcon' class='fa fa-3x " + ( global.lockStatus ? 'fa-unlock-alt' : 'fa-lock' ) + "'><\/i>";
       html += "            <\/span>";
@@ -119,19 +117,13 @@ app.Render.Access = function(){
       html += "    <\/div>";
       html += "<\/div>";
 
-  app.Sammy.swap(html)
+  app.Sammy.swap(html, function(){
+  })
 }
 
 app.Render.Illumination = function(){
-  // if(encendido){
-  //   hasesto()
-  // }else{
-  //   haslotro()
-  // }
-
-  // encendido ? hazesto() : hazlotro()
-  // html += "        <input type=\"checkbox\" name=\"checkbox_foco\" checked='" (endendido ? 'true' : 'false' ) "'>";
-
+  $('#navbar').removeClass('hidden')
+  $('#footer').removeClass('hidden')
   var html="";
       html += "<div id=\"iluminacion\" class=\"col-xs-12 content hidden\" align='center'>";
       html += "    <div class='foco'>";
@@ -156,10 +148,13 @@ app.Render.Illumination = function(){
 }
 
 app.Render.Climate = function(){
+  $('#navbar').removeClass('hidden')
+  $('#footer').removeClass('hidden')
   var html="";
       html += "<div id=\"climatizacion\" class=\"col-xs-12 content hidden\" align='center'>";
       html +=     "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; min-height:100%' \" align='center'>";
       html +=     "    <div>";
+      html +=     "        <img id=\"img-aire\" src='assets\/img\/Air-conditioner-ON_512.png' class=\"img-responsive\"><\/i>";
       html +=     "        <input id=\"check_climate\" type=\"checkbox\" checked data-toggle=\"toggle\">";
       html +=     "    <\/div>";
       html +=     "<\/div>";
@@ -177,39 +172,62 @@ app.Render.Climate = function(){
 }
 
 app.Render.Config = function(){
+  $('#navbar').removeClass('hidden')
+  $('#footer').removeClass('hidden')
+  $('#nav-title').html('Futuro Inteligente')
   var html="";
   html += "<div id='config'>";
-  html += "     <div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; min-height:100%'>";
-  html += "         <a href=\"console.html\"  class=\"btn btn-info\" id=\"btn\" role=\"button\">Console mode<\/a>";
+  html += "     <div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\">";
+  // html += "         <a href=\"console.html\"  class=\"btn btn-info\" id=\"btn\" role=\"button\">Console mode<\/a>";
   html += "         <div class=\"panel panel-default\">";
   html += "             <div class=\"panel-heading\" style=\"background-color: solid gray;\">";
   html += "                 <h3 class=\"panel-title\" style=\"text-align: center;\">Tiempos de acceso<\/h3>";
   html += "             <\/div>";
   html += "             <div class=\"panel-body\">";
   html += "                 <div class=\"form-group\">";
+  html += "                     <label>Tiempo de Apertura de Cerradura (seg)</label>";
   html += "                     <input type=\"number\" class=\"form-control\" id=\"olt\" placeholder=\"Opening lock timer (seg)\" value='" + global.oltRead + "'>";
   html += "                 <\/div>";
   html += "                 <div class=\"form-group\">";
+  html += "                     <label>Tiempo de espera de puerta abierta (seg)</label>";
   html += "                     <input type=\"number\" class=\"form-control\" id=\"odt\" placeholder=\"Opening door timeout (seg)\" value='" + global.odtRead + "'>";
   html += "                 <\/div>";
   html += "                 <div class=\"form-group\">";
+  html += "                     <label>Tiempo Error Apertura de Puerta (seg)</label>";
   html += "                     <input type=\"number\" class=\"form-control\" id=\"odtl\" placeholder=\"Opened door time limit (seg)\" value='" + global.odtlRead + "'>";
   html += "                 <\/div>";
   html += "                 <button id=\"btn_config\" type=\"button\" class=\"btn btn-primary btn-lg btn-block\">Cambiar configuración<\/button>";
   html += "             <\/div>";
   html += "         <\/div>   ";
   html += "     <\/div>";
-  html += "     <div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; min-height:100%'>";
+
+  html += "     <div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\">";
   html += "         <div class=\"panel panel-default\">";
   html += "             <div class=\"panel-heading\" style=\"background-color: solid gray;\">";
   html += "                 <h3 class=\"panel-title\" style=\"text-align: center;\">Fecha y hora<\/h3>";
   html += "             <\/div>";
   html += "             <div class=\"panel-body\">";
   html += "                 <div align=\"center\">";
-  html += "                     <input type=\"datetime-local\" id=\"datetime\" value= '" + global.timeRead + "'><br>";
+  html += "                     <input type=\"datetime-local\" id=\"datetime\" value= '" + global.timeRead + "' class='form-control'><br>";
   html += "                 <\/div><br>";
   html += "                 <div align=\"center\">";
   html += "                     <button id=\"btn_hora\" type=\"button\" class=\"btn btn-primary btn-lg btn-block\">Modificar hora<\/button>";
+  html += "                 <\/div>";
+  html += "             <\/div>";
+  html += "         <\/div>";
+  html += "     <\/div>";
+
+  html += "     <div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='margin-bottom:55px'>";
+  html += "         <div class=\"panel panel-default\">";
+  html += "             <div class=\"panel-heading\" style=\"background-color: solid gray;\">";
+  html += "                 <h3 class=\"panel-title\" style=\"text-align: center;\">Usuarios<\/h3>";
+  html += "             <\/div>";
+  html += "             <div class=\"panel-body\">";
+  html += "                 <div style='text-align: justified'>";
+  html += "                     <p>En este apartado se podrá consultar, agregar y eliminar usuarios.</p>";
+  html += "                 <\/div><br>";
+  html += "                 <div align=\"center\">";
+  html += "                     <button id=\"btn-download-users\" type=\"button\" class=\"btn btn-primary btn-lg btn-block\">Mostrar usuarios<\/button>";
   html += "                 <\/div>";
   html += "             <\/div>";
   html += "         <\/div>";
@@ -218,6 +236,46 @@ app.Render.Config = function(){
     app.Sammy.swap(html, function(){
       controller.readSettings()
     })
+}
+
+app.Render.Users = function(){
+    $('#nav-title').html('Usuarios')
+    $('#footer').addClass('hidden')
+
+    app.Sammy.swap(app.Loading)
+    controller.readUsers()
+}
+
+app.Render.UsersHTML = function(){
+    var html = "";
+        html += "<div id='userDiv' class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; min-height:100%'>";
+        html += "    <table class=\"table table-hover\">";
+        html += "        <thead>";
+        html += "            <tr>";
+        html += "                <th>Localidad<\/th>";
+        html += "                <th>ID tarjeta<\/th>";
+        html += "                <th><\/th>";
+        html += "            <\/tr>";
+        html += "        <\/thead>";
+        html += "        <tbody>";
+        for(var i=0; i<global.usrArray.length; i++)
+        {
+            html += "           <tr>";
+            html += "               <td>" +i+ "<\/td>";
+            if (global.usrArray[i].charAt(0) == 'f') {
+                html += "               <td>Disponible<\/td>";
+                html += "               <td><button data-localidad='"+ i +"' data-user='"+ global.usrArray[i] +"' class='btn btn-default btn-agregar'>Agregar<\/button><\/td>";
+            }else{
+                html += "               <td>"+ global.usrArray[i] +"<\/td>";
+                html += "               <td><button data-localidad='"+ i +"' data-user='"+ global.usrArray[i] +"' class='btn btn-default btn-eliminar'>Eliminar<\/button><\/td>";
+            }
+            html += "           <\/tr>";
+        }
+        html += "        <\/tbody>";
+        html += "    <\/table>";
+        html += "<\/div>";
+
+        app.Sammy.swap(html)
 }
 
 var socket;
@@ -234,7 +292,9 @@ var global = {
     oltRead: '',
     odtRead: '',
     odtlRead: '',
-    noError: true
+    noError: true,
+    usrArray: [],
+    userID: ''
 }
 
 var connection = {
@@ -254,7 +314,7 @@ var connection = {
             connection.port,
             function(){
                 // $('#connectedOn').html('Connected on ' + connection.host + ' on port ' + connection.port)
-                alert("Conectado a la tarjeta inteligente")
+                // alert("Conectado a la tarjeta inteligente")
                 window.location = '#/acceso'
             },
             function(errorMessage) {
@@ -286,18 +346,13 @@ var connection = {
     },
 
     Read: function (data) {
-        // app.counter++
-        // alert(app.counter)
-        // var response=[]
         var response = ''
         for (var item in data){
           response += convert.toHex( data[item] )
           // response.push(convert.toHex( data[item] ))
         }
-        // response.join('')
-        // alert(response)
-        // $('.console').append(response);
-        // $('.console').append('<br>');
+        // $('.console').append(response)
+        // $('.console').append('<br>')
         // decode.slicer(response)
         decode.fixResponse(response)
 
@@ -337,7 +392,6 @@ var decode = {
     end: '',
 
     slicer: function(response){
-      // alert(response)
       response.length
       // alert(response)
       decode.start = response.substr(0, 4)
@@ -450,10 +504,23 @@ var decode = {
               $('#odt').val(global.odtRead)
               $('#odtl').val(global.odtlRead)
           break; 
-          case '0500': break; // Agregar un usuario
-          case '0600': break; // Eliminar un usuario 
-          case '0b00': break; // Descargar bitacora
-          case '0c00': alert('bloque de usuario descargado'); break; // Descargar bloque de usuario (opcional si Admin)
+          case '0500': // Agregar un usuario
+              if (decode.ACK == '01'){
+                  controller.readUsers()
+                  app.Sammy.swap(app.Loading)
+              }else{alert('Error al agregar usuario')}
+          break; 
+          case '0600': // Eliminar un usuario
+              controller.readUsers()
+              app.Sammy.swap(app.Loading)
+          break; 
+          case '0b00': // Descargar bitacora
+          break; 
+          case '0c00': // Descargar bloque de usuario LISTO
+              var allUsers = decode.ACK
+              global.usrArray = allUsers.match(/.{1,20}/g)
+              $(document).trigger("usuarioscargados")
+          break; 
           case '0900': // Encender/apagar SP (SP1 luz, SP2 aire, SP3 opcional) LISTO
               switch (decode.ACK){
                   case '00':
@@ -470,18 +537,18 @@ var decode = {
                   break;
                   case '01':
                       if (global.flagOnOffSP == 'SP200') {
-                          alert('Foco encendido')
+                          // alert('Foco encendido')
                           $("#img-foco").attr("src","assets/img/foco-on-512.png")
                           global.sp2Status = true
                       }else if (global.flagOnOffSP == 'SP201'){
-                          alert('Foco apagado')
+                          // alert('Foco apagado')
                           $("#img-foco").attr("src","assets/img/foco-off-512.png")
                           global.sp2Status = false
                       }else if (global.flagOnOffSP == 'SP302'){
-                          alert('Aire encendido')
+                          // alert('Aire encendido')
                           global.sp3Status = true
                       }else if (global.flagOnOffSP == 'SP303'){
-                          alert('Aire apagado')
+                          // alert('Aire apagado')
                           global.sp3Status = false
                       }
                   break;
@@ -490,13 +557,75 @@ var decode = {
           break; 
           case '1100': // CERRADURA LISTO
               if(decode.ACK === '01'){
-                  alert('Cerradura abierta')
+                  // alert('Cerradura abierta')
                   global.lockStatus = true
                   $('#lockIcon').removeClass('fa-lock').addClass('fa-unlock-alt')
               }else{
                   alert('No se pudo ejecutar el comando')
                   global.lockStatus = false
                   $('#lockIcon').removeClass('fa-unlock-alt').addClass('fa-lock')
+              }
+          break;
+          case '0003': //eventos LISTO
+              switch(decode.checksum){
+                  case 'f001':
+                      alert('Evento F0: Sabotaje en alarma')
+                  break;
+                  case 'f101':
+                      alert('Evento F1: Alarma activada por entrada abierta')
+                  break;
+                  case 'f201':
+                      alert('Evento F2: Fallo en energía')
+                  break;
+                  case 'f301':
+                      alert('Evento F3: Batería baja')
+                  break;
+                  case 'f401':
+                      alert('Evento F4: Reinicialización del sistema')
+                  break;
+                  case 'f501':
+                      alert('Evento F5: Autoapagado')
+                  break;
+                  case 'f601':
+                      alert('Evento F6: Acceso permitido por terminal')
+                  break;
+                  case 'f701':
+                      alert('Evento F7: Terminal fuera de línea')
+                  break;
+                  case 'f801':
+                      alert('Evento F8: Recuperación de sabotaje')
+                  break;
+                  case 'f901':
+                      alert('Evento F9: Recuperación de puerta forzada')
+                  break;
+                  case 'fa01':
+                      alert('Evento FA: Recuperación en fallo de energía')
+                  break;
+                  case 'fb01':
+                      alert('Evento FB: Batería normal')
+                  break;
+                  case 'fc01':
+                      alert('Evento FC: Terminal en línea')
+                  break;
+                  case 'fd01':
+                      alert('Evento FD: Etiqueta *FIN no encontrada')
+                  break;
+                  case 'fe01':
+                      alert('Evento FE: Reajuste de hora')
+                  break;
+                  case 'ff01':
+                      alert('Evento FF: Alarma puerta video proyector abierta')
+                  break;
+                  case 'e001':
+                      alert('Evento E0: Error en apertura de puerta')
+                  break;
+                  case 'e101':
+                      alert('Evento E1: Error puerta dejada abierta')
+                  break;
+                  case 'e201':
+                      alert('Evento E2: Acceso permitido por terminal (tarjeta FI)')
+                  break;
+                  default: alert('El evento no puede ser interpretado'); break;
               }
           break;
           default: alert('La respuesta no puede ser interpretada'); break;
@@ -554,12 +683,15 @@ var controller = {
         }
     },
 
-    addUser: function(){
-
+    addUser: function(localidad, id){
+        var cmdAddUser = convert.hex2ascii('235e0500' + localidad + id + '000C3c3f')
+        connection.Write(cmdAddUser)
     },
 
-    removeUser: function(){
-
+    removeUser: function(locality){
+        var cmdRemoveUser = convert.hex2ascii('235e0600'+locality+'00023c3f')
+        connection.Write(cmdRemoveUser)
+        // controller.readUsers()
     },
 
     readUsers: function(){ // DESCARGAR USUARIO LISTO
@@ -574,6 +706,12 @@ var controller = {
 
 
 document.addEventListener("deviceready", onDeviceReady, false);
+
+$(document).on('usuarioscargados',function(){
+    app.Render.UsersHTML()
+})
+
+
 
 function onDeviceReady() {
     window.socket = new Socket();
@@ -616,9 +754,11 @@ $(document).on('click','#btn_config',function(){
 
 $(document).on('click','#btn_hora',function(){
   var datetimeValue = document.getElementById("datetime").value;
-  console.log(datetimeValue)
-
   decode.slicerdatetime(datetimeValue)
+})
+
+$(document).on('click','#btn-download-users',function(){
+    window.location = '#/users'
 })
 
 $(document).on('click','#send',function(){
@@ -635,13 +775,42 @@ $(document).on('click','#lockIcon',function(){
   controller.openDoor()
 })
 
+$(document).on('click','.btn-eliminar',function(){
+    var deleteUser = confirm("¿Confirma eliminar este usuario?");
+    if (deleteUser) {
+        var localidad = convert.AddZero(convert.toHex($(this).data('localidad')), 4)
+        global.userID= $(this).data('user')
+        controller.removeUser(localidad)
+    }
+})
+
+$(document).on('click','.btn-agregar',function(){
+    var localidad = convert.AddZero(convert.toHex($(this).data('localidad')), 4)
+    var user = prompt('Ingrese ID de tarjeta')
+    if (user != null){
+        if (user.length != 20){
+            alert('La longitud debe ser 20')
+            return
+        }else if (user.match(/[^0-9]/i)){
+            alert('El ID debe contener solo números')
+            return
+        }
+        for (var i=0; i<global.usrArray.length; i++){
+            if(user == global.usrArray[i]){
+                alert('Esta tarjeta está en uso.')
+                return
+            }
+        }
+        controller.addUser(localidad, user)
+    }
+})
+
 $(document).on('submit','#connectForm', function (e){
   e.preventDefault()
   var host = $('#txtIP').val()
   var port = parseInt($('#port').val())
   connection.host = host
   connection.port = port
-  // window.location = 'acceso.html'
   connection.Connect()
 })
 
