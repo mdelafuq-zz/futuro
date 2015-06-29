@@ -154,7 +154,7 @@ app.Render.Climate = function(){
       html += "<div id=\"climatizacion\" class=\"col-xs-12 content hidden\" align='center'>";
       html +=     "<div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-12\" style='height:100%; min-height:100%' \" align='center'>";
       html +=     "    <div>";
-      html +=     "        <img id=\"img-aire\" src='assets\/img\/Air-conditioner-ON_512.png' class=\"img-responsive\"><\/i>";
+      html +=     "        <img id=\"img-aire\" src='" + ( global.sp3Status ? 'assets/img/Air-conditioner_512-ON.png' : 'assets/img/Air-conditioner_512-OFF.png' ) + "' class=\"img-responsive\"><\/i>";
       html +=     "        <input id=\"check_climate\" type=\"checkbox\" checked data-toggle=\"toggle\">";
       html +=     "    <\/div>";
       html +=     "<\/div>";
@@ -546,9 +546,11 @@ var decode = {
                           global.sp2Status = false
                       }else if (global.flagOnOffSP == 'SP302'){
                           // alert('Aire encendido')
+                          $("#img-aire").attr("src","assets/img/Air-conditioner_512-ON.png")
                           global.sp3Status = true
                       }else if (global.flagOnOffSP == 'SP303'){
                           // alert('Aire apagado')
+                          $("#img-aire").attr("src","assets/img/Air-conditioner_512-OFF.png")
                           global.sp3Status = false
                       }
                   break;
@@ -625,7 +627,7 @@ var decode = {
                   case 'e201':
                       alert('Evento E2: Acceso permitido por terminal (tarjeta FI)')
                   break;
-                  default: alert('El evento no puede ser interpretado'); break;
+                  default: break;
               }
           break;
           default: alert('La respuesta no puede ser interpretada'); break;
